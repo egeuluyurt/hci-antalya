@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react"; // useEffect eklendi
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FileText, Terminal, Globe } from "lucide-react";
@@ -17,7 +17,7 @@ export default function Hero() {
     // Dili hem state'e hem hafızaya yazan fonksiyon
     const changeLanguage = (newLang: "EN" | "DE" | "TR") => {
         setLang(newLang);
-        localStorage.setItem("language", newLang); // WhyAudit burayı dinleyecek
+        localStorage.setItem("language", newLang);
     };
 
     const dict = {
@@ -45,7 +45,7 @@ export default function Hero() {
                         {(["EN", "DE", "TR"] as const).map((l) => (
                             <button
                                 key={l}
-                                onClick={() => changeLanguage(l)} // Fonksiyon güncellendi
+                                onClick={() => changeLanguage(l)}
                                 className={`transition-colors ${lang === l
                                     ? "text-[#00FF41] font-bold"
                                     : "text-gray-600 hover:text-white"
@@ -83,16 +83,20 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-                    <button
-                        onClick={() => {
-                            const element = document.getElementById('audit-engine');
-                            element?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className="bg-white text-black px-8 py-4 font-bold font-mono hover:bg-[#00FF41] transition-colors flex items-center gap-2 w-full md:w-auto justify-center"
+                    {/* GÜNCELLEME: target="_blank" eklendi */}
+                    <Link 
+                        href="/diagnostic" 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="w-full md:w-auto"
                     >
-                        <Terminal size={18} />
-                        {'>_'} {content.cta1}
-                    </button>
+                        <button
+                            className="bg-white text-black px-8 py-4 font-bold font-mono hover:bg-[#00FF41] transition-colors flex items-center gap-2 w-full justify-center"
+                        >
+                            <Terminal size={18} />
+                            {'>_'} {content.cta1}
+                        </button>
+                    </Link>
 
                     <Link href="/documentation" className="border border-gray-700 text-gray-400 px-8 py-4 font-mono hover:border-white hover:text-white transition-colors flex items-center gap-2 group w-full md:w-auto justify-center">
                         <FileText size={18} className="group-hover:text-[#00FF41] transition-colors" />

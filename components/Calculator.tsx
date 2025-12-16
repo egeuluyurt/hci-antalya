@@ -2,20 +2,31 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Calculator() {
+// TypeScript hatasını çözen "interface" tanımı
+interface CalculatorProps {
+  activeLang?: "EN" | "DE" | "TR";
+  onDataSuccess?: () => void; // DiagnosticEngine'e haber vermek için ekledik
+}
+
+// Fonksiyon artık activeLang ve onDataSuccess prop'larını kabul ediyor
+export default function Calculator({ activeLang, onDataSuccess }: CalculatorProps) {
   const [rooms, setRooms] = useState(200);
   const [formState, setFormState] = useState<"idle" | "processing" | "success">("idle");
   const [lang, setLang] = useState("EN");
 
-  // Dil Hafızasını Dinle
+  // DiagnosticEngine'den gelen dili veya yerel hafızayı dinle
   useEffect(() => {
-    const checkLang = () => {
-      const savedLang = localStorage.getItem("language") || "EN";
-      if (savedLang !== lang) setLang(savedLang);
-    };
-    const interval = setInterval(checkLang, 100);
-    return () => clearInterval(interval);
-  }, [lang]);
+    if (activeLang) {
+      setLang(activeLang);
+    } else {
+      const checkLang = () => {
+        const savedLang = localStorage.getItem("language") || "EN";
+        if (savedLang !== lang) setLang(savedLang);
+      };
+      const interval = setInterval(checkLang, 100);
+      return () => clearInterval(interval);
+    }
+  }, [activeLang, lang]);
 
   const dict = {
     TR: {
@@ -114,7 +125,6 @@ export default function Calculator() {
     e.preventDefault();
     setFormState("processing");
 
-    // Form verilerini topluyoruz
     const formData = {
       name: (e.target as any)[0].value,
       phone: (e.target as any)[1].value,
@@ -124,7 +134,6 @@ export default function Calculator() {
     };
 
     try {
-      // Senin kopyaladığın URL'yi buraya ekledim
       await fetch("https://script.google.com/macros/s/AKfycbxoK48LUS-TeARqkz0oIncLcvFrQjW-U2US1CFsb5zGI6Q5XxOPbZ0RLJbOPAmXgmZ6LA/exec", {
         method: "POST",
         mode: "no-cors", 
@@ -133,6 +142,12 @@ export default function Calculator() {
       });
       
       setFormState("success");
+
+      // EKLEME: Veri başarıyla gittiğinde üst bileşene haber veriyoruz
+      if (onDataSuccess) {
+        onDataSuccess();
+      }
+
     } catch (error) {
       console.error("Hata:", error);
       setFormState("idle");
@@ -141,129 +156,96 @@ export default function Calculator() {
   };
 
   return (
-    <section id="audit-engine" className="py-24 px-6 bg-[#0B0E14] border-b border-[#2A3241] relative overflow-hidden text-white">
-      
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#151922_1px,transparent_1px),linear-gradient(to_bottom,#151922_1px,transparent_1px)] bg-[length:40px_40px] opacity-30" />
-
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
+    <section id="audit-engine" className="bg-[#0B0E14] relative overflow-hidden text-white w-full">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-10">
         
         {/* SOL PANEL */}
-        <div className="bg-[#151922] border border-[#2A3241] p-8 lg:p-12 relative group">
+        <div className="bg-[#151922] border border-[#2A3241] p-6 lg:p-10 relative group">
            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00FF41] to-transparent opacity-50" />
-           <h3 className="font-mono text-[#00FF41] mb-8 flex items-center gap-2 uppercase">
+           <h3 className="font-mono text-[#00FF41] mb-6 flex items-center gap-2 uppercase text-xs">
              <span className="w-2 h-2 bg-[#00FF41] animate-pulse"></span>
              {current.input_title}
            </h3>
-           <div className="space-y-12">
+           <div className="space-y-10">
              <div>
-               <label className="font-mono text-xs text-gray-500 mb-4 block uppercase tracking-widest">{current.volume_label}</label>
+               <label className="font-mono text-[10px] text-gray-500 mb-3 block uppercase tracking-widest">{current.volume_label}</label>
                <input 
                  type="range" min="50" max="1000" step="10" value={rooms}
                  onChange={(e) => setRooms(Number(e.target.value))}
-                 className="w-full h-2 bg-[#0B0E14] appearance-none cursor-pointer rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:bg-[#00FF41] [&::-webkit-slider-thumb]:rounded-full"
+                 className="w-full h-1 bg-[#0B0E14] appearance-none cursor-pointer rounded-full [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-[#00FF41] [&::-webkit-slider-thumb]:rounded-full"
                />
-               <div className="mt-4 font-mono text-4xl text-white">
-                 {rooms} <span className="text-sm text-gray-600 uppercase tracking-widest">{current.units}</span>
+               <div className="mt-4 font-mono text-3xl text-white">
+                 {rooms} <span className="text-xs text-gray-600 uppercase tracking-widest">{current.units}</span>
                </div>
              </div>
-             <div className="grid grid-cols-2 gap-8 border-t border-[#2A3241] pt-8">
+             <div className="grid grid-cols-2 gap-4 border-t border-[#2A3241] pt-6">
                <div>
-                 <div className="font-mono text-[10px] text-gray-500 mb-1 tracking-widest uppercase">{current.baseline}</div>
-                 <div className="font-mono text-gray-400 text-sm flex flex-col">
+                 <div className="font-mono text-[9px] text-gray-500 mb-1 tracking-widest uppercase">{current.baseline}</div>
+                 <div className="font-mono text-gray-400 text-[10px] flex flex-col">
                     <span className="uppercase">{current.standard}</span>
-                    <span className="text-[10px] opacity-50 uppercase">{current.degradation}</span>
+                    <span className="opacity-50 uppercase">{current.degradation}</span>
                  </div>
                </div>
                <div>
-                 <div className="font-mono text-[10px] text-gray-500 mb-1 tracking-widest uppercase">{current.projection}</div>
-                 <div className="font-mono text-[#00FF41] text-sm flex flex-col">
+                 <div className="font-mono text-[9px] text-gray-500 mb-1 tracking-widest uppercase">{current.projection}</div>
+                 <div className="font-mono text-[#00FF41] text-[10px] flex flex-col">
                     <span className="uppercase">{current.engineered}</span>
-                    <span className="text-[10px] opacity-70 uppercase">{current.durability}</span>
+                    <span className="opacity-70 uppercase">{current.durability}</span>
                  </div>
                </div>
-             </div>
-             <div className="bg-red-500/5 border border-red-500/20 p-4 rounded text-[10px] font-mono text-gray-400">
-               <span className="text-red-500 font-bold block mb-1 uppercase tracking-widest">LAB_NOTE:</span>
-               {current.lab_note}
              </div>
            </div>
         </div>
 
         {/* SAĞ PANEL */}
-        <div className="bg-black border border-[#2A3241] relative flex flex-col justify-center overflow-hidden min-h-[500px]">
-          
-          <div className="absolute inset-0 flex flex-col items-center justify-center z-0 opacity-30 blur-md select-none pointer-events-none">
-             <div className="text-gray-500 font-mono text-sm mb-2 uppercase tracking-widest">{current.recovery_label}</div>
+        <div className="bg-black border border-[#2A3241] relative flex flex-col justify-center overflow-hidden min-h-[400px]">
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-0 opacity-10 blur-sm select-none pointer-events-none">
              <div className="text-8xl font-black text-[#00FF41]">€{savings}</div>
-             <div className="text-gray-500 font-mono text-xs mt-4 uppercase tracking-[0.3em]">{current.annual}</div>
           </div>
 
-          <div className="relative z-10 w-full h-full bg-black/70 backdrop-blur-sm flex flex-col items-center justify-center p-8">
+          <div className="relative z-10 w-full h-full bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center p-6">
             <AnimatePresence mode="wait">
-              
               {formState === "idle" && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full max-w-sm">
-                  <div className="text-center mb-6">
-                    <div className="inline-block border border-[#00FF41]/50 text-[#00FF41] font-mono text-[10px] tracking-widest px-3 py-1 mb-4 bg-[#00FF41]/10 uppercase">
-                      {current.report_locked}
-                    </div>
-                    <h3 className="text-white font-bold text-xl tracking-tight uppercase">{current.request_title}</h3>
-                    <p className="text-gray-500 text-xs mt-2 font-mono uppercase tracking-tighter italic">{current.request_desc}</p>
-                  </div>
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <input required type="text" placeholder={current.ph_name} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-4 font-mono text-xs focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
-                    <input required type="tel" placeholder={current.ph_phone} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-4 font-mono text-xs focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
-                    <input required type="email" placeholder={current.ph_email} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-4 font-mono text-xs focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
+                  <form onSubmit={handleSubmit} className="space-y-3">
+                    <input required type="text" placeholder={current.ph_name} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-3 font-mono text-[10px] focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
+                    <input required type="tel" placeholder={current.ph_phone} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-3 font-mono text-[10px] focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
+                    <input required type="email" placeholder={current.ph_email} className="w-full bg-[#0f1219] border border-[#2A3241] text-white p-3 font-mono text-[10px] focus:border-[#00FF41] outline-none transition-colors placeholder:text-gray-700 uppercase" />
                     <div className="relative">
-                      <select required className="w-full bg-[#0f1219] border border-[#2A3241] text-gray-400 p-4 font-mono text-xs focus:border-[#00FF41] outline-none appearance-none cursor-pointer uppercase">
+                      <select required className="w-full bg-[#0f1219] border border-[#2A3241] text-gray-400 p-3 font-mono text-[10px] focus:border-[#00FF41] outline-none appearance-none cursor-pointer uppercase">
                         <option value="">{current.select_level}</option>
                         {current.levels.map((lvl: string, idx: number) => (
                           <option key={idx} value={lvl}>{lvl}</option>
                         ))}
                       </select>
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none text-[8px]">▼</div>
                     </div>
-                    <button type="submit" className="w-full bg-[#00FF41] text-black font-bold font-mono py-4 hover:bg-white transition-colors tracking-widest text-xs mt-4 uppercase italic">{current.btn_request}</button>
+                    <button type="submit" className="w-full bg-[#00FF41] text-black font-bold font-mono py-3 hover:bg-white transition-colors tracking-widest text-[10px] mt-2 uppercase italic">{current.btn_request}</button>
                   </form>
                 </motion.div>
               )}
 
               {formState === "processing" && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center">
-                  <div className="w-12 h-12 border-2 border-[#2A3241] border-t-[#00FF41] rounded-full animate-spin mx-auto mb-6" />
-                  <div className="font-mono text-[#00FF41] text-xs animate-pulse uppercase tracking-[0.2em] leading-loose">{current.uploading}</div>
+                  <div className="w-8 h-8 border-2 border-[#2A3241] border-t-[#00FF41] rounded-full animate-spin mx-auto mb-4" />
+                  <div className="font-mono text-[#00FF41] text-[9px] animate-pulse uppercase tracking-widest">{current.uploading}</div>
                 </motion.div>
               )}
 
               {formState === "success" && (
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center w-full max-w-md">
-                   <div className="font-mono text-[#00FF41] text-[10px] mb-6 border border-[#00FF41] inline-block px-3 py-1 uppercase tracking-[0.3em]">
-                     {current.received}
-                   </div>
-                   <div className="mb-8 relative">
-                     <p className="font-mono text-gray-500 text-[10px] mb-2 uppercase tracking-widest">Projected Case Volume</p>
-                     <div className="text-7xl font-black text-white tracking-tighter">{rooms}</div>
-                     <p className="font-mono text-[#00FF41] text-[10px] mt-2 bg-[#00FF41]/10 inline-block px-2 py-1 tracking-widest uppercase">UNITS_UNDER_REVIEW</p>
-                   </div>
-                   <div className="bg-[#151922] p-6 border-l-2 border-[#00FF41] text-left">
-                     <p className="text-white text-sm font-mono mb-3 font-bold uppercase tracking-tighter">
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center w-full">
+                   <div className="bg-[#151922] p-4 border-l-2 border-[#00FF41] text-left">
+                     <p className="text-white text-xs font-mono mb-2 font-bold uppercase tracking-tighter">
                        <span className="text-[#00FF41] mr-2">✓</span> {current.case_file}
                      </p>
-                     <p className="text-gray-500 text-xs font-mono leading-relaxed mb-4 italic">
+                     <p className="text-gray-500 text-[10px] font-mono leading-relaxed italic">
                        {current.success_desc}
                      </p>
-                     <div className="text-[10px] text-gray-400 border-t border-[#2A3241] pt-3 mt-3 font-mono">
-                        <p className="mb-1"><span className="text-[#00FF41]">&gt;&gt;</span> {current.status_note}</p>
-                        <p><span className="text-[#00FF41]">&gt;&gt;</span> {current.eta_note}</p>
-                     </div>
                    </div>
                 </motion.div>
               )}
-
             </AnimatePresence>
           </div>
         </div>
-
       </div>
     </section>
   );
