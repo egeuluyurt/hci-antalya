@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Activity, ShieldAlert, Thermometer, ArrowRight } from "lucide-react";
+import { Activity, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { reports } from "@/lib/data"; // VERİYİ BURADAN ÇEKİYORUZ
+import { reports } from "@/lib/data"; // Veriyi buradan çekiyoruz
 
 export default function IntelligenceArchive() {
     const [lang, setLang] = useState<"TR" | "EN" | "DE">("EN");
@@ -13,14 +13,14 @@ export default function IntelligenceArchive() {
         if (savedLang) setLang(savedLang);
     }, []);
 
-    // Sadece ilk 3 raporu ana sayfada gösterelim
+    // Sadece ilk 3 raporu göster
     const featuredReports = reports.slice(0, 3);
 
     return (
         <section className="py-24 bg-[#0B0E14] border-t border-[#2A3241]">
             <div className="max-w-6xl mx-auto px-6">
                 
-                {/* BAŞLIK */}
+                {/* BAŞLIK ALANI */}
                 <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                     <div className="border-l-2 border-[#00FF41] pl-6">
                         <h2 className="text-[#00FF41] font-mono text-[10px] tracking-[0.4em] mb-2 uppercase italic font-bold">
@@ -30,20 +30,21 @@ export default function IntelligenceArchive() {
                             LATEST FORENSIC FINDINGS
                         </p>
                     </div>
-               <Link 
-    href="/archive" 
-    className="text-gray-600 font-mono text-[10px] hover:text-[#00FF41] transition-colors tracking-widest border border-gray-800 px-4 py-2 hover:border-[#00FF41]"
->
-    ENTER_ARCHIVE_DATALINK [ &gt;&gt;&gt; ]
-</Link>
+                    {/* DÜZELTME BURADA YAPILDI: Ok işaretleri ve tek link */}
+                    <Link 
+                        href="/archive" 
+                        className="text-gray-600 font-mono text-[10px] hover:text-[#00FF41] transition-colors tracking-widest border border-gray-800 px-4 py-2 hover:border-[#00FF41]"
+                    >
+                        ENTER_ARCHIVE_DATALINK [ &gt;&gt;&gt; ]
+                    </Link>
                 </div>
 
-                {/* BENTO GRID - OTOMATİK DATA */}
+                {/* BENTO GRID KUTULARI */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {featuredReports.map((rpt, idx) => (
                         <Link 
                             key={idx}
-                            href={`/archive/${rpt.id}`} // TIKLANINCA GİDECEĞİ ADRES
+                            href={`/archive/${rpt.id}`} 
                             className={`bg-[#151922] border border-[#2A3241] p-6 group relative overflow-hidden flex flex-col justify-between min-h-[250px] hover:border-[#00FF41] transition-colors ${idx === 0 ? 'md:col-span-2' : 'md:col-span-1'}`}
                         >
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
