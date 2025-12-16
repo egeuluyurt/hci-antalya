@@ -22,12 +22,11 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#0B0E14] text-white overflow-x-hidden font-sans">
 
-      {/* ÜST MENÜ (HEADER) */}
+      {/* HEADER */}
       <header className="fixed top-0 left-0 w-full z-[60] flex justify-between px-6 py-4 border-b border-[#2A3241] bg-[#0B0E14]/80 backdrop-blur-md font-mono text-[10px] md:text-xs text-[#00FF41]">
         <div className="flex items-center gap-4">
           <span>HCI_SYSTEM_V2.5</span>
 
-          {/* ARŞİV LİNKİ */}
           <Link
             href="/archive"
             className="border-l border-[#2A3241] pl-4 text-white hover:text-[#00FF41] transition-colors cursor-pointer"
@@ -42,19 +41,14 @@ export default function Home() {
         </div>
       </header>
 
-      {/* İÇERİK AKIŞI */}
+      {/* CONTENT FLOW */}
       <Hero />
-
       <WhyAudit />
-
       <ExplodedView />
-
       <AuditScope />
-
-      {/* Veri tabanından gelen 3'lü kutu */}
       <IntelligenceArchive />
 
-      {/* ALT BİLGİ (FOOTER) */}
+      {/* FOOTER */}
       <footer className="py-12 px-6 border-t border-[#2A3241] bg-black font-mono text-[10px] md:text-xs text-gray-500">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>

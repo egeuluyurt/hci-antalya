@@ -12,7 +12,7 @@ export default function IntelligenceArchive() {
         if (savedLang) setLang(savedLang);
     }, []);
 
-    // Veri güvenliği: reports boş gelirse hata vermesin
+    // Safety check: ensure reports exist
     const featuredReports = reports ? reports.slice(0, 3) : [];
 
     return (
@@ -64,7 +64,7 @@ export default function IntelligenceArchive() {
                                     VECTOR: {rpt.vector}
                                 </div>
                                 <h3 className="text-white font-bold text-xl group-hover:text-[#00FF41] transition-colors leading-tight mb-4 uppercase italic tracking-tighter">
-                                    {(rpt.content as any)[lang]?.title || rpt.title}
+                                    {rpt.content[lang]?.title || rpt.title}
                                 </h3>
                             </div>
 
