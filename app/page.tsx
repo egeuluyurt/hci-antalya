@@ -23,7 +23,8 @@ export default function Home() {
     <main className="min-h-screen bg-[#0B0E14] text-white overflow-x-hidden font-sans">
 
       {/* ÜST MENÜ (HEADER) */}
-      <header className="fixed top-0 left-0 w-full z-50 flex justify-between px-6 py-4 border-b border-[#2A3241] bg-[#0B0E14]/80 backdrop-blur-md font-mono text-[10px] md:text-xs text-[#00FF41]">
+      {/* DÜZELTME: z-50 yerine z-[60] yapıldı. Hero.tsx (z-50) ile çakışmayı önler. */}
+      <header className="fixed top-0 left-0 w-full z-[60] flex justify-between px-6 py-4 border-b border-[#2A3241] bg-[#0B0E14]/80 backdrop-blur-md font-mono text-[10px] md:text-xs text-[#00FF41]">
         <div className="flex items-center gap-4">
           <span>HCI_SYSTEM_V2.5</span>
 
@@ -57,7 +58,6 @@ export default function Home() {
       <AuditScope />
 
       {/* İSTİHBARAT ARŞİVİ (BENTO GRID) */}
-      {/* Tasarımcının önerisiyle final CTA öncesi konumlandırıldı */}
       <IntelligenceArchive />
 
       {/* ALT BİLGİ (FOOTER) */}
