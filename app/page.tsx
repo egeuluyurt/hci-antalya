@@ -1,91 +1,84 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Database, Search, ArrowRight, Globe, Thermometer, Activity, ShieldAlert } from "lucide-react";
 import Link from "next/link";
-import { reports } from "@/lib/data"; // DATA IMPORTU
+import Hero from "@/components/Hero";
+import WhyAudit from "@/components/WhyAudit";
+import ExplodedView from "@/components/ExplodedView";
+import AuditScope from "@/components/AuditScope";
+import IntelligenceArchive from "@/components/IntelligenceArchive";
 
-export default function ArchiveIndex() {
-  const [lang, setLang] = useState<"TR" | "EN" | "DE">("EN");
-  const [searchTerm, setSearchTerm] = useState("");
+export default function Home() {
+  const [activeLang, setActiveLang] = useState("EN");
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("language") as "TR" | "EN" | "DE";
-    if (savedLang) setLang(savedLang);
-  }, []);
-
-  // İkon seçici fonksiyon
-  const getIcon = (vector: string) => {
-    if (vector.includes("THERMAL")) return <Thermometer size={16} />;
-    if (vector.includes("OPEX")) return <ShieldAlert size={16} />;
-    return <Activity size={16} />;
-  }
+    const checkLang = () => {
+      const savedLang = localStorage.getItem("language") || "EN";
+      if (savedLang !== activeLang) setActiveLang(savedLang);
+    };
+    const interval = setInterval(checkLang, 100);
+    return () => clearInterval(interval);
+  }, [activeLang]);
 
   return (
-    <div className="min-h-screen bg-[#0B0E14] text-white p-6 md:p-20 font-mono">
-      {/* BAŞLIK BÖLÜMÜ */}
-      <div className="max-w-6xl mx-auto mb-16">
-        <div className="flex items-center gap-3 text-[#00FF41] mb-4">
-          <Database size={20} />
-          <span className="text-xs tracking-[0.5em] font-bold uppercase italic">// GLOBAL_INTELLIGENCE_DATABASE</span>
-        </div>
-        <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-8">FORENSIC ARCHIVE</h1>
+    <main className="min-h-screen bg-[#0B0E14] text-white overflow-x-hidden font-sans">
 
-        <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
-          <div className="relative w-full max-w-xl">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
-            <input
-              type="text"
-              placeholder="FILTER_BY_VECTOR_OR_ID..."
-              className="w-full bg-[#151922] border border-[#2A3241] p-4 pl-12 text-xs outline-none focus:border-[#00FF41] transition-colors uppercase text-white"
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          <div className="flex items-center gap-2 text-[10px] text-gray-500 border border-[#2A3241] px-3 py-2">
-            <Globe size={12} />
-            <span>ACTIVE_LANGUAGE: {lang}</span>
-          </div>
-        </div>
-      </div>
+      {/* ÜST MENÜ (HEADER) */}
+      <header className="fixed top-0 left-0 w-full z-[60] flex justify-between px-6 py-4 border-b border-[#2A3241] bg-[#0B0E14]/80 backdrop-blur-md font-mono text-[10px] md:text-xs text-[#00FF41]">
+        <div className="flex items-center gap-4">
+          <span>HCI_SYSTEM_V2.5</span>
 
-      {/* VERİTABANI LİSTESİ */}
-      <div className="max-w-6xl mx-auto border border-[#2A3241] bg-[#151922]/30">
-        <div className="grid grid-cols-4 p-4 border-b border-[#2A3241] text-[10px] text-gray-600 uppercase font-bold tracking-widest hidden md:grid italic">
-          <span>REPORT_ID</span>
-          <span>VECTOR_CLASSIFICATION</span>
-          <span>SUBJECT_ANALYSIS</span>
-          <span className="text-right">ACTION</span>
-        </div>
-
-        {reports.filter(r => {
-          const title = (r.content as any)[lang]?.title || r.title;
-          return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            r.id.toLowerCase().includes(searchTerm.toLowerCase())
-        }).map((rpt, idx) => (
+          {/* ARŞİV LİNKİ */}
           <Link
-            key={idx}
-            href={`/archive/${rpt.id}`} // DİNAMİK LİNK
-            className="grid grid-cols-1 md:grid-cols-4 p-6 border-b border-[#2A3241] items-center hover:bg-[#00FF41]/5 transition-all group"
+            href="/archive"
+            className="border-l border-[#2A3241] pl-4 text-white hover:text-[#00FF41] transition-colors cursor-pointer"
           >
-            <span className="text-[#00FF41] text-xs font-bold mb-2 md:mb-0 italic uppercase">{rpt.id.toUpperCase()}</span>
-            <div className="flex items-center gap-2 text-gray-400 text-[10px] mb-2 md:mb-0">
-              {getIcon(rpt.vector)}
-              <span className="uppercase">{rpt.vector}</span>
-            </div>
-            <span className="text-white text-xs font-bold uppercase tracking-tight mb-4 md:mb-0 italic">
-              {(rpt.content as any)[lang]?.title || rpt.title}
-            </span>
-            <div className="flex justify-end">
-              <div className="flex items-center gap-2 text-[10px] text-gray-500 group-hover:text-white transition-colors italic font-bold">
-                OPEN_FILE <ArrowRight size={14} className="text-[#00FF41]" />
-              </div>
-            </div>
+            {activeLang === "TR" ? "[ ARŞİV ]" : activeLang === "DE" ? "[ ARCHIV ]" : "[ ARCHIVE ]"}
           </Link>
-        ))}
-      </div>
+        </div>
 
-      <div className="max-w-6xl mx-auto mt-12 text-[8px] text-gray-700 uppercase tracking-[0.3em] italic font-bold">
-        SECURE ACCESS PROTOCOL ACTIVE ● TOTAL RECORDS: {reports.length} ● Location: Berlin_Central_Server
-      </div>
-    </div>
+        <div className="flex items-center gap-6">
+          <span className="animate-pulse hidden md:inline">● SYSTEM_STATUS: ONLINE</span>
+          <span>LOC: {activeLang === "TR" ? "BERLIN_MERKEZ" : "BERLIN_GLOBAL"}</span>
+        </div>
+      </header>
+
+      {/* İÇERİK AKIŞI */}
+      <Hero />
+
+      <WhyAudit />
+
+      <ExplodedView />
+
+      <AuditScope />
+
+      {/* Veri tabanından gelen 3'lü kutu */}
+      <IntelligenceArchive />
+
+      {/* ALT BİLGİ (FOOTER) */}
+      <footer className="py-12 px-6 border-t border-[#2A3241] bg-black font-mono text-[10px] md:text-xs text-gray-500">
+        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h4 className="text-white mb-4 italic tracking-widest">HCI_BERLIN_LABS</h4>
+            <p>Torstraße 177, 10115 Berlin</p>
+            <p>
+              {activeLang === "TR" ? "Bölge: EMEA & Global Merkez" :
+                activeLang === "DE" ? "Region: EMEA & Globales Hub" :
+                  "Region: EMEA & Global Hub"}
+            </p>
+          </div>
+          <div className="md:text-right">
+            <p className="mb-2">
+              {activeLang === "TR" ? "İLETİŞİM_PROTOKOLÜ:" : "CONTACT_PROTOCOL:"}
+            </p>
+            <a href="mailto:audit@hci-berlin.com" className="text-[#00FF41] hover:underline tracking-tighter">
+              audit@hci-berlin.com
+            </a>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto mt-12 pt-8 border-t border-white/5 text-center opacity-30 uppercase">
+          © 2025 HCI Berlin Audit Laboratory - Secure Access Protocol
+        </div>
+      </footer>
+    </main>
   );
 }
