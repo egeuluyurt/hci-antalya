@@ -13,7 +13,7 @@ export default function IntelligenceArchive() {
         if (savedLang) setLang(savedLang);
     }, []);
 
-    // Eğer reports yüklenmediyse veya boşsa güvenli bir şekilde boş dizi döndür
+    // Veri gelmezse veya boşsa güvenli şekilde boş dizi döndür
     const featuredReports = reports ? reports.slice(0, 3) : [];
 
     return (
@@ -35,7 +35,8 @@ export default function IntelligenceArchive() {
                         href="/archive"
                         className="text-gray-600 font-mono text-[10px] hover:text-[#00FF41] transition-colors tracking-widest border border-gray-800 px-4 py-2 hover:border-[#00FF41]"
                     >
-                        ENTER_ARCHIVE_DATALINK [ &gt;&gt;&gt; ]
+                        {/* React içinde özel karakter kullanımı düzeltildi */}
+                        ENTER_ARCHIVE_DATALINK [ {">>>"} ]
                     </Link>
                 </div>
 
@@ -65,6 +66,7 @@ export default function IntelligenceArchive() {
                                     VECTOR: {rpt.vector}
                                 </div>
                                 <h3 className="text-white font-bold text-xl group-hover:text-[#00FF41] transition-colors leading-tight mb-4 uppercase italic tracking-tighter">
+                                    {/* Dil kontrolü ve başlık gösterimi */}
                                     {(rpt.content as any)[lang]?.title || rpt.title}
                                 </h3>
                             </div>
