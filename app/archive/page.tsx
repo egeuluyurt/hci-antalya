@@ -67,6 +67,8 @@ export default function ArchiveIndex() {
                     <Link
                         key={idx}
                         href={`/archive/${rpt.id}`} // TIKLAYINCA DETAY SAYFASINA GİDER
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="grid grid-cols-1 md:grid-cols-4 p-6 border-b border-[#2A3241] items-center hover:bg-[#00FF41]/5 transition-all group"
                     >
                         <span className="text-[#00FF41] text-xs font-bold mb-2 md:mb-0 italic uppercase">{rpt.id.toUpperCase()}</span>

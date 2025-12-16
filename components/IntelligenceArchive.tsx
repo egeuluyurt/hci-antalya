@@ -32,6 +32,8 @@ export default function IntelligenceArchive() {
 
                     <Link
                         href="/archive"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-gray-600 font-mono text-[10px] hover:text-[#00FF41] transition-colors tracking-widest border border-gray-800 px-4 py-2 hover:border-[#00FF41]"
                     >
                         ENTER_ARCHIVE_DATALINK [ &gt;&gt;&gt; ]
@@ -44,6 +46,8 @@ export default function IntelligenceArchive() {
                         <Link
                             key={idx}
                             href={`/archive/${rpt.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className={`bg-[#151922] border border-[#2A3241] p-6 group relative overflow-hidden flex flex-col justify-between min-h-[250px] hover:border-[#00FF41] transition-colors ${idx === 0 ? 'md:col-span-2' : 'md:col-span-1'}`}
                         >
                             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
