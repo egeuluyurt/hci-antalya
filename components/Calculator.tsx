@@ -110,12 +110,34 @@ export default function Calculator() {
   const current = (dict as any)[lang] || dict.EN;
   const savings = (rooms * 450).toLocaleString("en-US");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormState("processing");
-    setTimeout(() => {
+
+    // Form verilerini topluyoruz
+    const formData = {
+      name: (e.target as any)[0].value,
+      phone: (e.target as any)[1].value,
+      email: (e.target as any)[2].value,
+      level: (e.target as any)[3].value,
+      rooms: rooms
+    };
+
+    try {
+      // Senin kopyaladığın URL'yi buraya ekledim
+      await fetch("https://script.google.com/macros/s/AKfycbxoK48LUS-TeARqkz0oIncLcvFrQjW-U2US1CFsb5zGI6Q5XxOPbZ0RLJbOPAmXgmZ6LA/exec", {
+        method: "POST",
+        mode: "no-cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
+      });
+      
       setFormState("success");
-    }, 2500);
+    } catch (error) {
+      console.error("Hata:", error);
+      setFormState("idle");
+      alert("Bağlantı hatası oluştu.");
+    }
   };
 
   return (
