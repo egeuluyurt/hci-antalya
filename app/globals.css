@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 226, 232, 240;
+  --background-start-rgb: 11, 14, 20;
+  --background-end-rgb: 11, 14, 20;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  font-family: 'Inter', sans-serif;
+}
+
+/* O havalı ızgara arka planı */
+.bg-grid-pattern {
+  background-image: linear-gradient(#2A3241 1px, transparent 1px),
+    linear-gradient(90deg, #2A3241 1px, transparent 1px);
+  background-size: 40px 40px;
+}
