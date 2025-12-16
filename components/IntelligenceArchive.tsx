@@ -12,7 +12,7 @@ export default function IntelligenceArchive() {
         if (savedLang) setLang(savedLang);
     }, []);
 
-    // Ana sayfada sadece ilk 3 raporu göster
+    // Veri güvenliği: reports boş gelirse hata vermesin
     const featuredReports = reports ? reports.slice(0, 3) : [];
 
     return (
@@ -30,7 +30,6 @@ export default function IntelligenceArchive() {
                         </p>
                     </div>
 
-                    {/* DÜZELTİLEN KISIM: Tek bir Link var, iç içe değil */}
                     <Link
                         href="/archive"
                         className="text-gray-600 font-mono text-[10px] hover:text-[#00FF41] transition-colors tracking-widest border border-gray-800 px-4 py-2 hover:border-[#00FF41]"
@@ -39,7 +38,7 @@ export default function IntelligenceArchive() {
                     </Link>
                 </div>
 
-                {/* RAPOR KARTLARI */}
+                {/* BENTO GRID */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {featuredReports.map((rpt, idx) => (
                         <Link
