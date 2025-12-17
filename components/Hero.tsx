@@ -14,16 +14,40 @@ export default function Hero() {
         if (savedLang) setLang(savedLang);
     }, []);
 
-    // Dili hem state'e hem hafızaya yazan fonksiyon
+    // Dili değiştiren ve sayfayı yenileyen fonksiyon
     const changeLanguage = (newLang: "EN" | "DE" | "TR") => {
         setLang(newLang);
         localStorage.setItem("language", newLang);
+        // Bu satır sayesinde dil değişince tüm site (Arşiv dahil) anında güncellenir
+        window.location.reload();
     };
 
+    // İŞTE YENİ "ANLAŞILABİLİR" İŞ DİLİ
     const dict = {
-        EN: { status: "SYSTEM_OPERATIONAL", title: "HOSPITALITY", subtitle: "COST INDEX", desc: "Precision auditing for the modern hotelier.", cta1: "INITIATE AUDIT", cta2: "VIEW AUDIT PROTOCOLS" },
-        DE: { status: "SYSTEM_BEREIT", title: "GASTGEWERBE", subtitle: "KOSTENINDEX", desc: "Präzisionsprüfung für den modernen Hotelier.", cta1: "AUDIT STARTEN", cta2: "PROTOKOLLE ANSEHEN" },
-        TR: { status: "SİSTEM_AKTİF", title: "KONAKLAMA", subtitle: "MALİYET ENDEKSİ", desc: "Modern otelciler için hassas denetim ve materyal analizi.", cta1: "DENETİMİ BAŞLAT", cta2: "PROTOKOLLERİ İNCELE" }
+        EN: {
+            status: "SYSTEM_ONLINE",
+            title: "HOTEL",
+            subtitle: "COST AUDIT",
+            desc: "Detect invisible financial leaks in energy, textiles, and operations with Berlin-grade precision.",
+            cta1: "CALCULATE SAVINGS",
+            cta2: "HOW IT WORKS"
+        },
+        DE: {
+            status: "SYSTEM_BEREIT",
+            title: "HOTEL",
+            subtitle: "KOSTENAUDIT",
+            desc: "Erkennen Sie unsichtbare finanzielle Lecks bei Energie, Textilien und Betrieb mit Berliner Präzision.",
+            cta1: "ERSPARNIS BERECHNEN",
+            cta2: "WIE ES FUNKTIONIERT"
+        },
+        TR: {
+            status: "SİSTEM_AKTİF",
+            title: "OTEL",
+            subtitle: "MALİYET DENETİMİ",
+            desc: "Enerji, tekstil ve operasyon süreçlerindeki görünmez nakit kaçaklarını Berlin standartlarında tespit edin.",
+            cta1: "KAYIP HESAPLA",
+            cta2: "NASIL ÇALIŞIR?"
+        }
     };
 
     const content = dict[lang];
@@ -70,7 +94,7 @@ export default function Hero() {
                 <div className="flex items-center justify-center gap-2 mb-6">
                     <span className="w-2 h-2 bg-[#00FF41] rounded-full animate-pulse"></span>
                     <h2 className="font-mono text-[#00FF41] text-xs tracking-[0.2em]">
-                        {content.status} • V2.4.0
+                        {content.status} • V2.5
                     </h2>
                 </div>
 
@@ -83,11 +107,11 @@ export default function Hero() {
                 </p>
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
-                    {/* GÜNCELLEME: target="_blank" eklendi */}
-                    <Link 
-                        href="/diagnostic" 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
+                    {/* Diagnostic Linki - Yeni Sekmede Açar */}
+                    <Link
+                        href="/diagnostic"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="w-full md:w-auto"
                     >
                         <button

@@ -2,60 +2,60 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Calculator from './Calculator'; 
+import Calculator from './Calculator';
 
 const TRANSLATIONS = {
-  TR: {
-    protocol: "PROTOKOL",
-    yes: "EVET",
-    no: "HAYIR",
-    complete: "TEŞHİS TAMAMLANDI: OPERASYONEL NEKROZ TESPİT EDİLDİ",
-    mandate: "MÜDAHALEYİ BAŞLAT (RECOVERY MANDATE)",
-    description: "Bu rakam; tesisinizdeki termodinamik sızıntı, varlık nekrozu ve misafir sadakat kaybının yıllık toplamıdır.",
-    calcTitle: "// TESİS KAPASİTE VERİLERİNİ GİRİNİZ",
-    finishBtn: "ANALİZİ TAMAMLA",
-    btnLocked: "ÖNCE PROJEKSİYON TALEP EDİN",
-    questions: [
-      { id: 'D-01', text: "Temiz ve kuru bir banyo havlusunu ön kolunuzun hassas iç kısmına sürttüğünüzde zımpara hissi veriyor mu?", impact: 63617, vector: 'Moleküler Nekroz' },
-      { id: 'D-03', text: "Odadaki elektrikli su ısıtıcısının (kettle) rezistansında beyaz/gri bir kireç tabakası görüyor musunuz?", impact: 152500, vector: 'Termodinamik Parazitizm' },
-      { id: 'D-04', text: "Sabunu suyla köpürtmeye çalıştığınızda zengin bir köpük yerine yapışkan, mat bir film mi oluşuyor?", impact: 900000, vector: 'Marka Değer Erozyonu' },
-      { id: 'D-02', text: "Musluk diplerinde veya bağlantı noktalarında beyaz, sert kireç halkaları fark ediyor musunuz?", impact: 46800, vector: 'İşçilik Sürtünmesi' }
-    ]
-  },
-  EN: {
-    protocol: "PROTOCOL",
-    yes: "YES / POSITIVE",
-    no: "NO / NEGATIVE",
-    complete: "DIAGNOSTIC COMPLETE: OPERATIONAL NECROSIS DETECTED",
-    mandate: "INITIALIZE RECOVERY MANDATE",
-    description: "This figure represents the annual total of thermodynamic leakage, asset necrosis, and guest loyalty loss in your facility.",
-    calcTitle: "// ENTER FACILITY CAPACITY DATA",
-    finishBtn: "COMPLETE ANALYSIS",
-    btnLocked: "REQUEST PROJECTION TO UNLOCK",
-    questions: [
-      { id: 'D-01', text: "Does a clean, dry bath towel feel like mild sandpaper against the sensitive skin of your inner forearm?", impact: 63617, vector: 'Molecular Necrosis' },
-      { id: 'D-03', text: "Is the heating element of the in-room electric kettle coated in a white/grey plaque (limescale)?", impact: 152500, vector: 'Thermodynamic Parasitism' },
-      { id: 'D-04', text: "Does the bar soap create a slimy, flat film that is difficult to rinse instead of a rich foam?", impact: 900000, vector: 'Brand Equity Erosion' },
-      { id: 'D-02', text: "Do you notice white, hard limescale rings at the base of faucets or connection points?", impact: 46800, vector: 'Labor Friction' }
-    ]
-  },
-  DE: {
-    protocol: "PROTOKOLL",
-    yes: "JA / POSITIV",
-    no: "NEIN / NEGATIV",
-    complete: "DIAGNOSE ABGESCHLOSSEN: OPERATIVE NEKROSE ERKANNT",
-    mandate: "WIEDERHERSTELLUNGSMANDAT STARTEN",
-    description: "Diese Zahl entspricht der jährlichen Gesamtsumme aus thermodynamischen Leckagen, Anlagenekrose und Verlust der Gästetreue.",
-    calcTitle: "// GEBEN SIE DIE ANLAGENKAPAZITÄTSDATEN EIN",
-    finishBtn: "ANALYSE ABSCHLIESSEN",
-    btnLocked: "PROGNOSE ANFORDERN ZUM FREISCHALTEN",
-    questions: [
-      { id: 'D-01', text: "Fühlt sich ein sauberes, trockenes Badetuch auf der empfindlichen Haut Ihres Unterarms wie Schmirgelpapier an?", impact: 63617, vector: 'Molekulare Nekrose' },
-      { id: 'D-03', text: "Ist das Heizelement des Wasserkochers im Zimmer mit einer weiß/grauen Kalkschicht überzogen?", impact: 152500, vector: 'Thermodynamischer Parasitismus' },
-      { id: 'D-04', text: "Erzeugt die Seife statt eines reichhaltigen Schaums einen schleimigen, flachen Film?", impact: 900000, vector: 'Markenerosion' },
-      { id: 'D-02', text: "Bemerken Sie weiße, harte Kalkringe an Armaturen oder Anschlusspunkten?", impact: 46800, vector: 'Arbeitsreibung' }
-    ]
-  }
+    TR: {
+        protocol: "DENETİM ADIMI",
+        yes: "EVET (Tespit Edildi)",
+        no: "HAYIR (Temiz)",
+        complete: "DENETİM TAMAMLANDI: KRİTİK MALİYET KAÇAĞI TESPİT EDİLDİ",
+        mandate: "ÇÖZÜM RAPORU OLUŞTUR",
+        description: "Bu rakam; tesisinizde kireçlenme, kimyasal aşınma ve verimsiz ekipman kullanımı nedeniyle havaya savrulan yıllık paradır.",
+        calcTitle: "// TESİS KAPASİTESİNİ GİRİN",
+        finishBtn: "KAYBI HESAPLA",
+        btnLocked: "ÖNCE PROJEKSİYON TALEP EDİN",
+        questions: [
+            { id: 'D-01', text: "Yıkanmış temiz havlulara dokunduğunuzda sertlik veya zımpara hissi veriyor mu?", impact: 63617, vector: 'Tekstil Kimyasal Yıpranması' },
+            { id: 'D-03', text: "Odadaki elektrikli su ısıtıcısının (kettle) rezistansında beyaz/gri bir kireç tabakası görüyor musunuz?", impact: 152500, vector: 'Enerji Verimsizliği' },
+            { id: 'D-04', text: "Sabunu suyla köpürtmeye çalıştığınızda zengin bir köpük yerine yapışkan, mat bir film mi oluşuyor?", impact: 900000, vector: 'Müşteri Memnuniyeti Kaybı' },
+            { id: 'D-02', text: "Musluk diplerinde veya duş başlıklarında beyaz kireç lekeleri görüyor musunuz?", impact: 46800, vector: 'Demirbaş Ömrü Kısalması' }
+        ]
+    },
+    EN: {
+        protocol: "AUDIT STEP",
+        yes: "YES (Detected)",
+        no: "NO (Clear)",
+        complete: "AUDIT COMPLETE: CRITICAL FINANCIAL LEAK DETECTED",
+        mandate: "GENERATE SOLUTION REPORT",
+        description: "This figure represents the annual money lost due to calcification, chemical wear, and inefficient equipment usage.",
+        calcTitle: "// ENTER HOTEL CAPACITY",
+        finishBtn: "CALCULATE LOSS",
+        btnLocked: "REQUEST PROJECTION TO UNLOCK",
+        questions: [
+            { id: 'D-01', text: "Do clean towels feel hard or like sandpaper to the touch?", impact: 63617, vector: 'Textile Chemical Degradation' },
+            { id: 'D-03', text: "Is there visible limescale on the heating element of kettles?", impact: 152500, vector: 'Energy Inefficiency' },
+            { id: 'D-04', text: "Does soap/shampoo lather poorly and leave a film?", impact: 900000, vector: 'Guest Satisfaction Loss' },
+            { id: 'D-02', text: "Are there white scale deposits around faucets or showerheads?", impact: 46800, vector: 'Asset Lifespan Reduction' }
+        ]
+    },
+    DE: {
+        protocol: "PRÜFSCHRITT",
+        yes: "JA (Erkannt)",
+        no: "NEIN (Sauber)",
+        complete: "AUDIT ABGESCHLOSSEN: KRITISCHES FINANZLECK ERKANNT",
+        mandate: "LÖSUNGSBERICHT ERSTELLEN",
+        description: "Diese Zahl stellt das jährliche Geld dar, das durch Verkalkung, chemischen Verschleiß und ineffiziente Nutzung verloren geht.",
+        calcTitle: "// HOTELKAPAZITÄT EINGEBEN",
+        finishBtn: "VERLUST BERECHNEN",
+        btnLocked: "PROGNOSE ANFORDERN ZUM FREISCHALTEN",
+        questions: [
+            { id: 'D-01', text: "Fühlen sich saubere Handtücher hart oder wie Schmirgelpapier an?", impact: 63617, vector: 'Chemischer Textilverschleiß' },
+            { id: 'D-03', text: "Gibt es sichtbare Kalkablagerungen in Wasserkochern?", impact: 152500, vector: 'Energieineffizienz' },
+            { id: 'D-04', text: "Schäumt Seife/Shampoo schlecht und hinterlässt einen Film?", impact: 900000, vector: 'Verlust der Kundenzufriedenheit' },
+            { id: 'D-02', text: "Gibt es weiße Kalkablagerungen an Wasserhähnen?", impact: 46800, vector: 'Verkürzung der Anlagenlebensdauer' }
+        ]
+    }
 };
 
 export default function DiagnosticEngine() {
@@ -113,8 +113,8 @@ export default function DiagnosticEngine() {
                             className="space-y-8"
                         >
                             <div className="flex justify-between items-center text-[10px] tracking-[0.2em] text-slate-500 font-mono">
-                                <span>{t.protocol}: BERLIN_V4 / {current.id}</span>
-                                <span>VECTOR: {current.vector}</span>
+                                <span>{t.protocol}: {current.id} / 04</span>
+                                <span className="text-[#00FF41]">TANI: {current.vector}</span>
                             </div>
 
                             <h2 className="text-2xl md:text-3xl text-white font-light leading-snug">
@@ -148,22 +148,21 @@ export default function DiagnosticEngine() {
                         <h3 className="text-[#00FF41] font-mono text-[10px] tracking-[0.3em] text-center uppercase">
                             {t.calcTitle}
                         </h3>
-                        
+
                         {/* Calculator'a onDataSuccess prop'unu gönderdik */}
-                        <Calculator 
-                          activeLang={activeLang} 
-                          onDataSuccess={() => setIsDataSubmitted(true)} 
+                        <Calculator
+                            activeLang={activeLang}
+                            onDataSuccess={() => setIsDataSubmitted(true)}
                         />
 
                         <div className="flex justify-center pt-6">
                             <button
                                 onClick={finalizeAudit}
                                 disabled={!isDataSubmitted}
-                                className={`px-12 py-5 text-xs font-bold uppercase tracking-widest transition-all ${
-                                  isDataSubmitted 
-                                  ? "bg-white text-black hover:bg-lime-400 cursor-pointer" 
-                                  : "bg-gray-900 text-gray-600 cursor-not-allowed opacity-50 border border-gray-800"
-                                }`}
+                                className={`px-12 py-5 text-xs font-bold uppercase tracking-widest transition-all ${isDataSubmitted
+                                        ? "bg-white text-black hover:bg-lime-400 cursor-pointer"
+                                        : "bg-gray-900 text-gray-600 cursor-not-allowed opacity-50 border border-gray-800"
+                                    }`}
                             >
                                 {isDataSubmitted ? t.finishBtn : t.btnLocked}
                             </button>
