@@ -1,122 +1,168 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
-import { ArrowLeft, Lock, Download, AlertTriangle, FileX } from "lucide-react";
+import { Database, Search, ArrowRight, Globe, Thermometer, Activity, ShieldAlert, AlertTriangle } from "lucide-react";
 import Link from "next/link";
-import LeadForm from "@/components/LeadForm";
-import { reports } from "@/lib/data"; // YENİ VERİTABANI BAĞLANTISI
+import { reports } from "@/lib/data";
 
-export default function ArchiveDetail() {
-  const params = useParams();
-  const id = params.id as string; 
-  const [lang, setLang] = useState<"TR" | "EN" | "DE">("EN");
-  const [isFormOpen, setIsFormOpen] = useState(false);
+const TRANSLATIONS = {
+    TR: {
+        tag: "// GLOBAL_INTELLIGENCE_DATABASE",
+        title: "ADLİ ARŞİV",
+        search_placeholder: "VEKTÖR VEYA ID İLE FİLTRELE...",
+        lang_label: "AKTİF DİL",
+        col_id: "RAPOR NO",
+        col_vector: "VEKTÖR SINIFI",
+        col_subject: "KONU ANALİZİ",
+        col_action: "İŞLEM",
+        open_file: "DOSYAYI AÇ",
+        footer_text: "GÜVENLİ ERİŞİM PROTOKOLÜ AKTİF ● TOPLAM KAYIT:",
+        footer_loc: "● KONUM: Berlin_Merkez_Sunucu"
+    },
+    EN: {
+        tag: "// GLOBAL_INTELLIGENCE_DATABASE",
+        title: "FORENSIC ARCHIVE",
+        search_placeholder: "FILTER_BY_VECTOR_OR_ID...",
+        lang_label: "ACTIVE_LANGUAGE",
+        col_id: "REPORT_ID",
+        col_vector: "VECTOR_CLASSIFICATION",
+        col_subject: "SUBJECT_ANALYSIS",
+        col_action: "ACTION",
+        open_file: "OPEN_FILE",
+        footer_text: "SECURE ACCESS PROTOCOL ACTIVE ● TOTAL RECORDS:",
+        footer_loc: "● Location: Berlin_Central_Server"
+    },
+    DE: {
+        tag: "// GLOBALE_INTELLIGENZ_DATENBANK",
+        title: "FORENSISCHES ARCHIV",
+        search_placeholder: "FILTER_NACH_VEKTOR_ODER_ID...",
+        lang_label: "AKTIVE_SPRACHE",
+        col_id: "BERICHT_NR",
+        col_vector: "VEKTOR_KLASSIFIZIERUNG",
+        col_subject: "THEMEN_ANALYSE",
+        col_action: "AKTION",
+        open_file: "DATEI_ÖFFNEN",
+        footer_text: "SICHERER ZUGANGSPROTOKOLL AKTIV ● GESAMT:",
+        footer_loc: "● Standort: Berlin_Zentralserver"
+    }
+};
 
-  useEffect(() => {
-    const savedLang = localStorage.getItem("language") as "TR" | "EN" | "DE";
-    if (savedLang) setLang(savedLang);
-  }, []);
+export default function ArchiveIndex() {
+    const [lang, setLang] = useState<"TR" | "EN" | "DE">("EN");
+    const [searchTerm, setSearchTerm] = useState("");
+    const [mounted, setMounted] = useState(false);
 
-  // ID'ye göre doğru raporu buluyoruz
-  const currentReport = reports.find((r) => r.id === id);
+    useEffect(() => {
+        setMounted(true);
+        const savedLang = localStorage.getItem("language");
+        if (savedLang === "TR" || savedLang === "EN" || savedLang === "DE") {
+            setLang(savedLang);
+        }
 
-  // EĞER RAPOR BULUNAMAZSA (404)
-  if (!currentReport) {
+        const handleStorageChange = () => {
+            const newLang = localStorage.getItem("language");
+            if (newLang === "TR" || newLang === "EN" || newLang === "DE") {
+                setLang(newLang);
+            }
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        const interval = setInterval(handleStorageChange, 500);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(interval);
+        };
+    }, []);
+
+    const t = TRANSLATIONS[lang];
+
+    const getIcon = (vector: string) => {
+        if (vector.includes("THERMAL") || vector.includes("ENERJİ")) return <Thermometer size={16} className="text-red-500" />;
+        if (vector.includes("OPEX") || vector.includes("OPERASYON") || vector.includes("SURGE")) return <ShieldAlert size={16} className="text-orange-500" />;
+        if (vector.includes("MOLECULAR") || vector.includes("TEKSTİL") || vector.includes("NECROSIS")) return <Activity size={16} className="text-lime-500" />;
+        return <AlertTriangle size={16} className="text-gray-500" />;
+    };
+
+    if (!mounted) return null;
+
     return (
-      <div className="min-h-screen bg-[#0B0E14] flex flex-col items-center justify-center text-center p-6 border-t border-red-900">
-        <FileX size={64} className="text-red-500 mb-6 opacity-50" />
-        <h1 className="text-white text-3xl font-black mb-2 tracking-tighter">DOSYA BULUNAMADI</h1>
-        <p className="text-gray-500 font-mono text-xs mb-8">
-          ERİŞMEYE ÇALIŞTIĞINIZ "{id}" NOLU KAYIT SİLİNMİŞ VEYA MEVCUT DEĞİL.
-        </p>
-        <Link href="/" className="bg-[#00FF41] text-black px-6 py-3 font-bold text-xs uppercase tracking-widest hover:bg-white transition-colors">
-          SİSTEME GERİ DÖN
-        </Link>
-      </div>
+        <div className="min-h-screen bg-[#0B0E14] text-white p-6 md:p-20 font-sans">
+            {/* HERDER */}
+            <div className="max-w-6xl mx-auto mb-16">
+                <div className="flex items-center gap-3 text-[#00FF41] mb-4">
+                    <Database size={20} />
+                    <span className="text-xs tracking-[0.5em] font-bold uppercase italic font-mono">{t.tag}</span>
+                </div>
+                <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-8 text-white">
+                    {t.title}
+                </h1>
+
+                <div className="flex flex-col md:flex-row gap-6 items-start md:items-center justify-between">
+                    {/* SEARCH */}
+                    <div className="relative w-full max-w-xl">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" size={18} />
+                        <input
+                            type="text"
+                            placeholder={t.search_placeholder}
+                            className="w-full bg-[#151922] border border-[#2A3241] p-4 pl-12 text-xs outline-none focus:border-[#00FF41] transition-colors uppercase text-white placeholder:text-gray-700 font-mono"
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={searchTerm}
+                        />
+                    </div>
+                    {/* LANGUAGE */}
+                    <div className="flex items-center gap-2 text-[10px] text-gray-500 border border-[#2A3241] px-3 py-2 font-mono uppercase">
+                        <Globe size={12} />
+                        <span>{t.lang_label}: <span className="text-[#00FF41]">{lang}</span></span>
+                    </div>
+                </div>
+            </div>
+
+            {/* LIST */}
+            <div className="max-w-6xl mx-auto border border-[#2A3241] bg-[#151922]/30">
+                <div className="grid grid-cols-4 p-4 border-b border-[#2A3241] text-[10px] text-gray-600 uppercase font-bold tracking-widest hidden md:grid italic font-mono">
+                    <span>{t.col_id}</span>
+                    <span>{t.col_vector}</span>
+                    <span>{t.col_subject}</span>
+                    <span className="text-right">{t.col_action}</span>
+                </div>
+
+                {reports.filter(r => {
+                    const content = r.content[lang];
+                    // SAFE ACCESS: Only check content.title. Removed r.title fallback.
+                    const title = content?.title || "";
+                    return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        r.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                        r.vector.toLowerCase().includes(searchTerm.toLowerCase());
+                }).map((rpt, idx) => {
+                    const content = rpt.content[lang];
+                    return (
+                        <Link
+                            key={rpt.id}
+                            href={`/archive/${rpt.id}`}
+                            className="grid grid-cols-1 md:grid-cols-4 p-6 border-b border-[#2A3241] items-center hover:bg-[#00FF41]/5 transition-all group border-l-2 border-l-transparent hover:border-l-[#00FF41]"
+                        >
+                            <span className="text-[#00FF41] text-xs font-bold mb-2 md:mb-0 italic uppercase font-mono">{rpt.id}</span>
+                            <div className="flex items-center gap-2 text-gray-400 text-[10px] mb-2 md:mb-0 font-mono">
+                                {getIcon(rpt.vector)}
+                                <span className="uppercase">{rpt.vector}</span>
+                            </div>
+                            <span className="text-white text-xs font-bold uppercase tracking-tight mb-4 md:mb-0 italic">
+                                {content?.title}
+                            </span>
+                            <div className="flex justify-end">
+                                <div className="flex items-center gap-2 text-[10px] text-gray-500 group-hover:text-white transition-colors italic font-bold font-mono">
+                                    {t.open_file} <ArrowRight size={14} className="text-[#00FF41] group-hover:translate-x-1 transition-transform" />
+                                </div>
+                            </div>
+                        </Link>
+                    );
+                })}
+            </div>
+
+            {/* FOOTER */}
+            <div className="max-w-6xl mx-auto mt-12 text-[8px] text-gray-700 uppercase tracking-[0.3em] italic font-bold font-mono">
+                {t.footer_text} {reports.length} {t.footer_loc}
+            </div>
+        </div>
     );
-  }
-
-  const content = currentReport.content[lang];
-
-  return (
-    <div className="min-h-screen bg-[#0B0E14] text-gray-300 font-sans p-6 md:p-12 relative overflow-hidden">
-      
-      <LeadForm isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} reportId={id} />
-
-      <div className="max-w-3xl mx-auto relative z-10 pt-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-[#00FF41] text-xs font-mono mb-8 hover:opacity-70 transition-opacity">
-          <ArrowLeft size={14} /> {lang === "TR" ? "VAKA LİSTESİNE DÖN" : "BACK TO CASE LIST"}
-        </Link>
-
-        {/* BAŞLIK ALANI */}
-        <div className="mb-12 border-b border-[#2A3241] pb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="bg-red-500/10 text-red-500 text-[10px] font-bold px-2 py-1 rounded border border-red-500/20 tracking-widest uppercase">
-              {currentReport.id}
-            </span>
-            <span className="text-gray-500 text-[10px] font-mono tracking-widest uppercase">
-              {currentReport.vector}
-            </span>
-          </div>
-          <h1 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4 uppercase">
-            {content.title}
-          </h1>
-          <p className="text-lg text-gray-400 font-light leading-relaxed">
-            {content.summary}
-          </p>
-        </div>
-
-        {/* HİKAYE (BLOG) */}
-        {content.story && (
-          <div className="space-y-12">
-            {content.story.map((item, idx) => (
-              <div key={idx} className="relative pl-8 border-l-2 border-[#2A3241]">
-                <span className="absolute -left-[9px] top-0 w-4 h-4 bg-[#0B0E14] border-2 border-[#2A3241] rounded-full"></span>
-                <h3 className="text-[#00FF41] font-mono text-xs font-bold tracking-widest mb-2 uppercase">
-                  // 0{idx + 1} {item.head}
-                </h3>
-                <p className="text-white text-base leading-relaxed">
-                  {item.text}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* VURUCU SONUÇ */}
-        <div className="mt-16 bg-[#151922] border border-red-900/30 p-8 rounded-lg flex items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <div className="p-3 bg-red-500/10 text-red-500 rounded-full"><AlertTriangle size={24} /></div>
-            <div>
-              <div className="text-xs text-gray-500 font-mono mb-1">{lang === "TR" ? "TOPLAM MALİYET ETKİSİ" : "TOTAL COST IMPACT"}</div>
-              <div className="text-2xl font-bold text-white">{currentReport.loss}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* KİLİTLİ ALAN */}
-        <div className="mt-12 p-1 bg-gradient-to-r from-[#00FF41] via-green-800 to-[#0B0E14] rounded-xl">
-          <div className="bg-[#0B0E14] p-8 rounded-lg text-center">
-            <h3 className="text-white font-bold text-xl mb-2 uppercase">
-              {lang === "TR" ? "BU SORUN SİZDE DE VAR MI?" : "DO YOU HAVE THIS PROBLEM?"}
-            </h3>
-            <p className="text-gray-400 text-sm mb-8 max-w-lg mx-auto">
-              {lang === "TR" ? "Tam dosyayı ve çözüm reçetesini indirin." : "Download the full file and solution recipe."}
-            </p>
-            <button 
-              onClick={() => setIsFormOpen(true)}
-              className="inline-flex items-center gap-3 bg-[#00FF41] text-black px-8 py-4 font-bold text-sm uppercase tracking-widest hover:bg-white transition-colors rounded"
-            >
-              <Download size={18} />
-              {content.download_text}
-            </button>
-            <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-gray-600 font-mono">
-              <Lock size={12} /> SECURE PROTOCOL
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  );
 }
