@@ -87,7 +87,7 @@ export default function ArchiveIndex() {
 
     return (
         <div className="min-h-screen bg-[#0B0E14] text-white p-6 md:p-20 font-sans">
-            {/* HERDER */}
+            {/* HEADER */}
             <div className="max-w-6xl mx-auto mb-16">
                 <div className="flex items-center gap-3 text-[#00FF41] mb-4">
                     <Database size={20} />
@@ -128,7 +128,6 @@ export default function ArchiveIndex() {
 
                 {reports.filter(r => {
                     const content = r.content[lang];
-                    // SAFE ACCESS: Only check content.title. Removed r.title fallback.
                     const title = content?.title || "";
                     return title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         r.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
