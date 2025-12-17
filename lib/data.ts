@@ -1,16 +1,18 @@
+// lib/data.ts - SİTENİN TEK GERÇEK VERİ KAYNAĞI
+
 export interface ReportContent {
     title: string;
     summary: string;
     fullContent: string;
+    story?: { head: string; text: string }[];
+    download_text?: string;
 }
 
 export interface Report {
     id: string;
     vector: string;
-    status: "CRITICAL" | "STABLE" | "MONITORING";
-    date: string;
-    location: string;
-    title: string;
+    iconType: "THERMOMETER" | "ACTIVITY" | "SHIELD" | "ALERT";
+    status: "CRITICAL" | "STABLE" | "MONITORING" | "URGENT";
     loss: string;
     content: {
         TR: ReportContent;
@@ -19,135 +21,131 @@ export interface Report {
     };
 }
 
+// DİKKAT: 'export const reports' olarak dışarı aktarıyoruz!
 export const reports: Report[] = [
     {
         id: "rpt-7702-ant",
-        vector: "THERMAL_LOSS",
+        vector: "ENERJİ_KAYBI",
+        iconType: "THERMOMETER",
         status: "CRITICAL",
-        date: "2025-06-15",
-        location: "ANTALYA_SAHA_LAB",
-        title: "CALCIUM-CARBONATE INDUCED FIBER SHEARING",
         loss: "$118,400",
         content: {
             TR: {
-                title: "KALSİYUM-KARBONAT KAYNAKLI LİF PARÇALANMASI",
-                summary: "Bölgedeki sert suyun (kireç) endüstriyel yıkama süreçlerinde pamuk lifleri üzerinde oluşturduğu mikroskobik kristalleşme, havlu ömrünü %40 azaltmaktadır.",
-                fullContent: `
-          <h3 class="text-[#00FF41] font-mono text-sm tracking-widest mb-4 mt-8">// 01. MİKROSKOBİK ANALİZ</h3>
-          <p class="mb-6 leading-relaxed text-gray-300">
-            Antalya bölgesindeki 14 tesisten alınan numunelerde, liflerin iç yapısında kalsiyum birikintileri tespit edildi. Bu birikintiler, kurutma sırasında 'bıçak etkisi' yaratarak lifleri içeriden kesiyor.
-          </p>
-          <div class="text-center border-t border-b border-[#00FF41]/30 py-6 mb-8">
-            <span class="block text-gray-500 text-xs tracking-[0.5em] mb-2">YILLIK TAHMİNİ KAYIP</span>
-            <span class="text-5xl md:text-6xl font-black text-[#00FF41] tracking-tighter">$118,400</span>
-          </div>
-        `
+                title: "ISITMA SİSTEMİNDE GİZLİ %35 KAYIP",
+                summary: "Kireçli suyun kazanlarda oluşturduğu doğal izolasyon, enerji faturanızı %35 şişiriyor.",
+                download_text: "KİREÇ ÖNLEYİCİ TEKNİK ŞARTNAME",
+                fullContent: "",
+                story: [
+                    { head: "ŞİKAYET", text: "5 yıldızlı tesis, doluluk aynı olmasına rağmen enerji faturasında %30 artış bildirdi." },
+                    { head: "HCI TESPİTİ", text: "Kazan rezistanslarında 3mm kireç tabakası tespit edildi. Bu tabaka ısıyı hapsediyordu." },
+                    { head: "SONUÇ", text: "Sistem suyu ısıtmak için %35 fazla elektrik harcıyordu. Ekipman ömrü 8 aya düştü." }
+                ]
             },
             EN: {
-                title: "CALCIUM-CARBONATE INDUCED FIBER SHEARING",
-                summary: "Microscopic crystallization caused by hard water during industrial washing cycles reduces towel lifespan by 40%.",
-                fullContent: `
-           <h3 class="text-[#00FF41] font-mono text-sm tracking-widest mb-4 mt-8">// 01. MICROSCOPIC ANALYSIS</h3>
-           <p class="mb-6 leading-relaxed text-gray-300">
-             Calcium deposits have been detected within the internal structure of fibers in samples from 14 facilities. These deposits create a 'knife effect' during drying, shearing the fibers from the inside.
-           </p>
-           <div class="text-center border-t border-b border-[#00FF41]/30 py-6 mb-8">
-            <span class="block text-gray-500 text-xs tracking-[0.5em] mb-2">ESTIMATED ANNUAL LOSS</span>
-            <span class="text-5xl md:text-6xl font-black text-[#00FF41] tracking-tighter">$118,400</span>
-          </div>
-        `
+                title: "HIDDEN 35% LOSS IN HEATING",
+                summary: "Limescale acts as insulation in boilers, inflating energy bills by 35%.",
+                download_text: "ANTI-SCALE TECHNICAL SPEC",
+                fullContent: "",
+                story: [
+                    { head: "THE COMPLAINT", text: "5-star resort reported 30% energy bill surge despite stable occupancy." },
+                    { head: "HCI DETECTION", text: "3mm limescale layer found on heating elements, blocking heat transfer." },
+                    { head: "THE VERDICT", text: "System burned 35% more power. Asset lifespan dropped to 8 months." }
+                ]
             },
             DE: {
-                title: "KALZIUMKARBONAT-INDUZIERTE FASERZERSTÖRUNG",
-                summary: "Mikroskopische Kristallisation durch hartes Wasser verkürzt die Lebensdauer von Handtüchern um 40%.",
-                fullContent: `<p class="text-gray-300">Deutsche Übersetzung wird geladen...</p>`
+                title: "VERSTECKTER 35% ENERGIEVERLUST",
+                summary: "Kalkablagerungen erhöhen die Energiekosten um 35%.",
+                download_text: "ANTI-KALK SPEZIFIKATION",
+                fullContent: "",
+                story: [
+                    { head: "DIE BESCHWERDE", text: "Hotel meldet 30% Anstieg der Energiekosten." },
+                    { head: "HCI-ERKENNUNG", text: "3mm Kalkschicht auf Heizelementen entdeckt." },
+                    { head: "DAS URTEIL", text: "System verbrauchte 35% mehr Strom." }
+                ]
             }
         }
     },
     {
         id: "rpt-4409-ber",
-        vector: "MOLECULAR_NECROSIS",
-        status: "STABLE",
-        date: "2024-11-20",
-        location: "BERLIN_CENTRAL",
-        title: "RESIDUAL CHEMICAL OXIDATION",
+        vector: "TEKSTİL_HASARI",
+        iconType: "ACTIVITY",
+        status: "URGENT",
         loss: "$42,200",
         content: {
             TR: {
-                title: "KALINTI KİMYASAL OKSİDASYONU",
-                summary: "Çarşaf yüzeylerinde kalan deterjan artıkları, insan teriyle reaksiyona girerek 'sarı leke' oluşumunu hızlandırıyor.",
-                fullContent: `<p class="text-gray-300">Detaylı kimyasal analiz verileri...</p>`
+                title: "HAVLULARIN ÖMRÜNÜ YARIYA İNDİREN HATA",
+                summary: "Yanlış yıkama kimyasalları havlu liflerini yakıyor, ömrü 120 yıkamadan 45'e düşürüyor.",
+                download_text: "DOĞRU YIKAMA FORMÜLÜ",
+                fullContent: "",
+                story: [
+                    { head: "ŞİKAYET", text: "Havlular sezon ortasında grileşiyor ve yırtılıyordu." },
+                    { head: "HCI TESPİTİ", text: "Lif analizinde kimyasal yanıklar görüldü. Yasaklı klor kullanımı tespit edildi." },
+                    { head: "SONUÇ", text: "Tekstil bütçesi gereksiz yere iki katına çıktı." }
+                ]
             },
             EN: {
-                title: "RESIDUAL CHEMICAL OXIDATION",
-                summary: "Detergent residues on sheet surfaces react with human sweat, accelerating 'yellow stain' formation.",
-                fullContent: `<p class="text-gray-300">Detailed chemical analysis data...</p>`
+                title: "THE MISTAKE HALVING TOWEL LIFESPAN",
+                summary: "Wrong chemicals burn towel fibers, reducing lifespan from 120 to 45 washes.",
+                download_text: "CORRECT WASH FORMULA",
+                fullContent: "",
+                story: [
+                    { head: "THE COMPLAINT", text: "Towels were turning grey and tearing mid-season." },
+                    { head: "HCI DETECTION", text: "Chemical burns detected on fibers due to banned chlorine." },
+                    { head: "THE VERDICT", text: "Textile budget doubled unnecessarily." }
+                ]
             },
             DE: {
-                title: "RÜCKSTÄNDIGE CHEMISCHE OXIDATION",
-                summary: "Waschmittelrückstände reagieren mit menschlichem Schweiß und beschleunigen die Bildung gelber Flecken.",
-                fullContent: `<p class="text-gray-300">Inhalt...</p>`
+                title: "FEHLER HALBIERT HANDTUCH-LEBENSDAUER",
+                summary: "Falsche Chemikalien zerstören Handtuchfasern.",
+                download_text: "WASCHFORMEL HERUNTERLADEN",
+                fullContent: "",
+                story: [
+                    { head: "DIE BESCHWERDE", text: "Handtücher wurden grau und rissen." },
+                    { head: "HCI-ERKENNUNG", text: "Chemische Verbrennungen durch Chlor entdeckt." },
+                    { head: "DAS URTEIL", text: "Textilbudget verdoppelte sich." }
+                ]
             }
         }
     },
     {
         id: "rpt-1205-ist",
-        vector: "OPEX_SURGE",
+        vector: "OPERASYON_VERİMSİZLİĞİ",
+        iconType: "SHIELD",
         status: "MONITORING",
-        date: "2024-10-05",
-        location: "ISTANBUL_UNIT",
-        title: "THERMODYNAMIC PARASITISM IN KETTLE SYSTEMS",
         loss: "$15,800",
         content: {
             TR: {
-                title: "SU ISITICI SİSTEMLERİNDE TERMODİNAMİK PARAZİTİZM",
-                summary: "Oda içi kettle rezistanslarındaki kireçlenme, suyu kaynatma süresini %30 uzatarak enerji faturasını şişiriyor.",
-                fullContent: `<p class="text-gray-300">Enerji verimlilik raporu...</p>`
+                title: "TEMİZLİK SÜRESİNİ UZATAN TUZAK",
+                summary: "Yanlış yüzey temizleyici kullanımı kromu aşındırıyor, temizlik süresini oda başı 4 dk uzatıyor.",
+                download_text: "VERİMLİ KİMYASALLAR LİSTESİ",
+                fullContent: "",
+                story: [
+                    { head: "ŞİKAYET", text: "Banyo temizliği çok uzun sürüyor, lekeler çıkmıyordu." },
+                    { head: "HCI TESPİTİ", text: "Ucuz temizleyici yüzeyleri aşındırıp kiri hapsediyordu." },
+                    { head: "SONUÇ", text: "Günde 33 saatlik iş gücü kaybı (4 ekstra personel maliyeti)." }
+                ]
             },
             EN: {
-                title: "THERMODYNAMIC PARASITISM IN KETTLE SYSTEMS",
-                summary: "Limescale on in-room kettle heating elements extends boiling time by 30%, inflating energy bills.",
-                fullContent: `<p class="text-gray-300">Energy efficiency report...</p>`
+                title: "THE TRAP DOUBLING CLEANING TIME",
+                summary: "Wrong cleaners corrode chrome, adding 4 mins to cleaning time per room.",
+                download_text: "EFFICIENT CHEMICALS LIST",
+                fullContent: "",
+                story: [
+                    { head: "THE COMPLAINT", text: "Cleaning took too long, stains persisted." },
+                    { head: "HCI DETECTION", text: "Cheap cleaner corroded surfaces, trapping dirt." },
+                    { head: "THE VERDICT", text: "33 hours of labor lost daily." }
+                ]
             },
             DE: {
-                title: "THERMODYNAMISCHER PARASITISMUS",
-                summary: "Kalkablagerungen verlängern die Kochzeit um 30% und erhöhen die Energiekosten.",
-                fullContent: `<p class="text-gray-300">Inhalt...</p>`
-            }
-        }
-    },
-    {
-        id: "ant-2025-09",
-        vector: "REVENUE_NECROSIS",
-        status: "CRITICAL",
-        date: "2025-06-15",
-        location: "ANTALYA_PILOT",
-        title: "THE $900,000 SENSORY EROSION",
-        loss: "$900,000",
-        content: {
-            TR: {
-                title: "THE $900,000 SENSORY EROSION & REVENUE NECROSIS",
-                summary: "Antalya 5 Yıldız segmentinde yapılan denetimler, yıllık 900.000 USD tutarında gizli kayba yol açıyor.",
-                fullContent: `
-          <h3 class="text-[#00FF41] font-mono text-sm tracking-widest mb-4 mt-8">// 01. EXECUTIVE SUMMARY</h3>
-          <p class="mb-6 leading-relaxed text-gray-300">
-            Otellerin operasyonel döngülerindeki bir mühendislik hatası yüzünden yıllık <span class="text-[#00FF41] font-bold text-lg">$900,000</span> tutarında bir özkaynak erimesi yaşanıyor.
-          </p>
-          <div class="bg-[#151922] p-4 border-l-2 border-red-500 mb-6">
-              <strong class="text-white block mb-1">Cationic Saponification Failure:</strong>
-              Sabun ve kalsiyum birleşerek çözünmeyen bir film tabakası oluşturur.
-          </div>
-        `
-            },
-            EN: {
-                title: "THE $900,000 SENSORY EROSION",
-                summary: "Hidden asset retention loss of $900,000 annually due to water chemistry mismatch.",
-                fullContent: `<p class="text-gray-300">Full English report content...</p>`
-            },
-            DE: {
-                title: "DIE $900.000 SENSORISCHE EROSION",
-                summary: "Versteckter Verlust von 900.000 $.",
-                fullContent: `<p class="text-gray-300">Inhalt...</p>`
+                title: "REINIGUNGSZEIT VERDOPPELT",
+                summary: "Falsche Reiniger korrodieren Chrom.",
+                download_text: "EFFIZIENTE CHEMIKALIEN",
+                fullContent: "",
+                story: [
+                    { head: "DIE BESCHWERDE", text: "Reinigung dauerte zu lange." },
+                    { head: "HCI-ERKENNUNG", text: "Billigreiniger beschädigten Oberflächen." },
+                    { head: "DAS URTEIL", text: "33 Stunden Arbeitsverlust pro Tag." }
+                ]
             }
         }
     }
