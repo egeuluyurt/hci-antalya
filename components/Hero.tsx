@@ -18,35 +18,36 @@ export default function Hero() {
     const changeLanguage = (newLang: "EN" | "DE" | "TR") => {
         setLang(newLang);
         localStorage.setItem("language", newLang);
-        // Bu satır sayesinde dil değişince tüm site (Arşiv dahil) anında güncellenir
+        // Dil değişince tüm site (Arşiv dahil) anında güncellenir
         window.location.reload();
     };
 
-    // İŞTE YENİ "ANLAŞILABİLİR" İŞ DİLİ
+    // İŞTE YENİ "PATRON YAKALAYAN" VURUCU DİL
     const dict = {
         EN: {
             status: "SYSTEM_ONLINE",
-            title: "HOTEL",
-            subtitle: "COST AUDIT",
-            desc: "Detect invisible financial leaks in energy, textiles, and operations with Berlin-grade precision.",
-            cta1: "CALCULATE SAVINGS",
+            title: "TURN HIDDEN",
+            subtitle: "COSTS TO PROFIT",
+            desc: "Stop the money vanishing into thin air every day. Detect invisible leaks in energy and operations with Berlin precision.",
+            cta1: "CALCULATE MY LOSS",
             cta2: "HOW IT WORKS"
         },
         DE: {
             status: "SYSTEM_BEREIT",
-            title: "HOTEL",
-            subtitle: "KOSTENAUDIT",
-            desc: "Erkennen Sie unsichtbare finanzielle Lecks bei Energie, Textilien und Betrieb mit Berliner Präzision.",
-            cta1: "ERSPARNIS BERECHNEN",
+            title: "VERSTECKTE KOSTEN",
+            subtitle: "IN GEWINN WANDELN",
+            desc: "Stoppen Sie das Geld, das jeden Tag verschwindet. Erkennen Sie unsichtbare Lecks mit Berliner Präzision.",
+            cta1: "VERLUST BERECHNEN",
             cta2: "WIE ES FUNKTIONIERT"
         },
         TR: {
             status: "SİSTEM_AKTİF",
-            title: "OTEL",
-            subtitle: "MALİYET DENETİMİ",
-            desc: "Enerji, tekstil ve operasyon süreçlerindeki görünmez nakit kaçaklarını Berlin standartlarında tespit edin.",
-            cta1: "KAYIP HESAPLA",
-            cta2: "NASIL ÇALIŞIR?"
+            // BURASI DEĞİŞTİ: Çok daha vurucu ve merak uyandırıcı
+            title: "GİZLİ GİDERLERİ",
+            subtitle: "KARA ÇEVİRİN",
+            desc: "Otelinizde her gün havaya savrulan parayı durdurun. Enerji ve operasyonel kaçakları Berlin altyapısıyla bulun, ne kadar tasarruf edebileceğinizi hemen görün.",
+            cta1: "ZARARIMI HESAPLA", // "Denetim" yerine "Zarar" kelimesi tetikleyicidir
+            cta2: "SİSTEMİ İNCELE"
         }
     };
 
@@ -98,12 +99,12 @@ export default function Hero() {
                     </h2>
                 </div>
 
-                <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none mb-6 text-white">
+                <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none mb-6 text-white">
                     {content.title} <br /> <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">{content.subtitle}</span>
                 </h1>
 
                 <p className="font-mono text-gray-400 max-w-2xl mx-auto mb-10 text-sm leading-relaxed">
-                    {content.desc} <span className="text-white font-bold">Berlin Audit Labs</span> analytics.
+                    {content.desc}
                 </p>
 
                 <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
@@ -115,7 +116,7 @@ export default function Hero() {
                         className="w-full md:w-auto"
                     >
                         <button
-                            className="bg-white text-black px-8 py-4 font-bold font-mono hover:bg-[#00FF41] transition-colors flex items-center gap-2 w-full justify-center"
+                            className="bg-white text-black px-8 py-4 font-bold font-mono hover:bg-[#00FF41] transition-colors flex items-center gap-2 w-full justify-center shadow-[0_0_20px_rgba(0,255,65,0.3)] hover:shadow-[0_0_40px_rgba(0,255,65,0.6)]"
                         >
                             <Terminal size={18} />
                             {'>_'} {content.cta1}
