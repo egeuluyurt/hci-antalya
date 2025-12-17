@@ -1,237 +1,137 @@
 "use client";
-import { useState, useEffect } from "react"; // State ve Effect eklendi
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 
-// --- SOYUT GÖRSELLEŞTİRME BİLEŞENLERİ ---
-
-// 1. Fiber (Tekstil) Görselleştirmesi
-const FiberViz = () => {
-  const grid = Array(100).fill(0);
-  return (
-    <div className="w-full h-full relative bg-[#0B0E14] border border-[#00FF41]/30 p-4 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,65,0.1),transparent_70%)]" />
-      <h4 className="font-mono text-[#00FF41] text-xs mb-4">// TENSILE_STRENGTH_SIMULATION</h4>
-      <div className="grid grid-cols-10 gap-1 h-[80%]">
-        {grid.map((_, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0.2, scale: 0.5 }}
-            animate={{
-              opacity: [0.2, 0.8, 0.2],
-              scale: [0.5, 1.1, 0.5],
-              backgroundColor: i % 7 === 0 ? "#00FF41" : "#151922"
-            }}
-            transition={{
-              duration: 2 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 1
-            }}
-            className="rounded-sm border border-[#00FF41]/20"
-          />
-        ))}
-      </div>
-      <motion.div
-        className="absolute w-full h-[2px] bg-[#00FF41] shadow-[0_0_20px_#00FF41] opacity-50 z-20 top-0 left-0"
-        animate={{ top: ["0%", "100%", "0%"] }}
-        transition={{ repeat: Infinity, duration: 5, ease: "linear" }}
-      />
-    </div>
-  );
-};
-
-// 2. Kimyasal (Compound) Görselleştirmesi - İSİM DÜZELTİLDİ
-const CompoundViz = () => {
-  const metrics = [
-    { label: "MOLECULAR_STABILITY", value: "99.9%", target: 99 },
-    { label: "TOXIC_RESIDUE", value: "NONE", target: 100 },
-    { label: "PH_BALANCE", value: "5.5", target: 55 },
-  ];
-
-  return (
-    <div className="w-full h-full relative bg-[#0B0E14] border border-[#00FF41]/30 p-8 flex flex-col justify-center">
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,255,65,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,255,65,0.05)_1px,transparent_1px)] bg-[length:20px_20px]" />
-      <h4 className="font-mono text-[#00FF41] text-xs mb-8 relative z-10">// CHEMICAL_COMPOSITION_LAB</h4>
-
-      <div className="space-y-8 relative z-10">
-        {metrics.map((m, i) => (
-          <div key={i}>
-            <div className="flex justify-between font-mono text-xs text-gray-400 mb-2">
-              <span>{m.label}</span>
-              <span className="text-[#00FF41]">{m.value}</span>
-            </div>
-            <div className="h-2 bg-[#151922] overflow-hidden relative">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: `${m.target}%` }}
-                transition={{ duration: 1.5, delay: 0.2 * i, ease: "easeOut" }}
-                className="h-full bg-[#00FF41] relative"
-              >
-                <div className="absolute right-0 top-0 h-full w-[2px] bg-white animate-pulse" />
-              </motion.div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+const TRANSLATIONS = {
+  TR: {
+    tag: "MALZEME & KALİTE KONTROLÜ",
+    title: "SATIN ALDIĞINIZ ÜRÜNLERİN İÇİNİ GÖRÜYORUZ",
+    param1_title: "NEDEN ÇABUK ÇÖKÜYOR?", // Eski: Param_A Analiz Kapsamı
+    param1_desc: "Koltuk, yatak ve mobilyalarınızın sünger kalitesini ve çökme direncini ölçüyoruz. Tedarikçinin vaat ettiği yıl kadar dayanıp dayanmayacağını size baştan söylüyoruz.",
+    param2_title: "GİZLİ KALİTE TESTİ", // Eski: Yoğunluk Kalibrasyonu
+    param2_desc: "Tedarikçinin '1. Sınıf' dediği malzeme gerçekten öyle mi? İç dolgu malzemelerinin yoğunluğunu analiz edip, parasını ödediğiniz kaliteyi alıp almadığınızı raporluyoruz."
+  },
+  EN: {
+    tag: "MATERIAL & QUALITY CONTROL",
+    title: "WE SEE INSIDE THE PRODUCTS YOU BUY",
+    param1_title: "WHY DOES IT SAG SO FAST?",
+    param1_desc: "We measure the foam quality and sag resistance of your furniture. We tell you upfront if it will last as long as the supplier promised.",
+    param2_title: "HIDDEN QUALITY CHECK",
+    param2_desc: "Is the material strictly 'First Class' as claimed? We analyze the density of internal fillings to report if you are getting the quality you paid for."
+  },
+  DE: {
+    tag: "MATERIAL- & QUALITÄTSKONTROLLE",
+    title: "WIR SEHEN IN IHRE PRODUKTE HINEIN",
+    param1_title: "WARUM GIBT ES SO SCHNELL NACH?",
+    param1_desc: "Wir messen die Schaumstoffqualität und Einsinkbeständigkeit Ihrer Möbel. Wir sagen Ihnen im Voraus, ob sie so lange halten, wie versprochen.",
+    param2_title: "VERSTECKTE QUALITÄTSPRÜFUNG",
+    param2_desc: "Ist das Material wirklich 'Erste Klasse'? Wir analysieren die Dichte der Innenfüllungen und berichten, ob Sie die bezahlte Qualität erhalten."
+  }
 };
 
 export default function ExplodedView() {
-  const [activeTab, setActiveTab] = useState<"polymers" | "fibers" | "compounds">("polymers");
-  const [lang, setLang] = useState("EN");
+  const [activeLang, setActiveLang] = useState<"TR" | "EN" | "DE">("EN");
 
-  // Dili Hafızadan Dinle (Senin Sistemle Uyumlu)
   useEffect(() => {
-    const checkLang = () => {
-      const savedLang = localStorage.getItem("language") || "EN";
-      if (savedLang !== lang) setLang(savedLang);
-    };
-    const interval = setInterval(checkLang, 100);
-    return () => clearInterval(interval);
-  }, [lang]);
-
-  const modules = {
-    polymers: {
-      id: "01",
-      label: "POLYMER_PHYSICS",
-      title: lang === "TR" ? "KİNETİK YÜK SÖNÜMLEME" : lang === "DE" ? "KINETISCHE LASTDÄMPFUNG" : "KINETIC LOAD DAMPING",
-      desc: lang === "TR" ? "Dikey stres altında viskoelastik reaksiyon analizi. Ayakkabı, yatak ve ergonomik mobilyalarda malzeme yorgunluğunu önlemek için kinetik enerji dağılımını ölçüyoruz." : "Analyzing viscoelastic reaction under vertical stress. We measure kinetic energy dissipation to prevent material fatigue in footwear, mattresses, and ergonomic furniture.",
-      spec: lang === "TR" ? "YOĞUNLUK_KALİBRASYONU" : "DENSITY_CALIBRATION",
-      specDesc: lang === "TR" ? "Moleküler yoğunluk doğrulaması. Düşük yoğunluk, insan ağırlığı altında hızlı deformasyona yol açar." : "Verifying molecular density. Sub-optimal density leads to rapid deformation in guest-facing assets under human weight loads.",
-      type: "image",
-      image: "/images/polymer-stress-test.png",
-      fig: "FIG 1.0 // STRUCTURAL_LOAD_FEED"
-    },
-    fibers: {
-      id: "02",
-      label: "FIBER_ARCH",
-      title: lang === "TR" ? "GERİLME DİRENCİ MATRİSİ" : lang === "DE" ? "ZUGFESTIGKEITSMATRIX" : "TENSILE STRENGTH MATRIX",
-      desc: lang === "TR" ? "Aşınma direnci ve lif bütünlüğü ölçümü. Endüstriyel yıkamaya maruz kalan üniforma ve çarşaf gibi ürünlerin ömrünü uzatmak için kritiktir." : "Measuring abrasion resistance and fiber integrity. Critical for extending the lifecycle of high-stress items like staff uniforms and industrial-wash linens.",
-      spec: lang === "TR" ? "NEFES_ALABİLİRLİK_ENDEKSİ" : "BREATHABILITY_INDEX",
-      specDesc: lang === "TR" ? "Konforu maksimize etmek için doku üzerinden termodinamik hava akışını hesaplıyoruz." : "Calculating thermodynamic airflow through the weave to maximize comfort in guest textiles and staff apparel.",
-      type: "viz_fiber",
-      fig: "FIG 2.1 // WEAVE_SCAN"
-    },
-    compounds: {
-      id: "03",
-      label: "BIO_COMPOUNDS",
-      title: lang === "TR" ? "MOLEKÜLER GÜVENLİK" : lang === "DE" ? "MOLEKULARE SICHERHEIT" : "MOLECULAR SAFETY",
-      desc: lang === "TR" ? "Tehlikeli bileşenler için spektroskopik tarama. Kozmetik ve temizlik kimyasallarında tam dermatolojik güvenlik sağlıyoruz." : "Spectroscopic screening for hazardous volatile organic compounds (VOCs). Ensuring absolute dermatological safety in cosmetics and housekeeping chemicals.",
-      spec: lang === "TR" ? "BOZUNMA_ORANI" : "DECOMPOSITION_RATE",
-      specDesc: lang === "TR" ? "Tek kullanımlık ürünlerin biyobozunur timeline'ını doğrulayarak Global Green Star protokollerine uyum sağlıyoruz." : "Verifying the biodegradation timeline of all single-use amenities to ensure compliance with Global Green Star protocols.",
-      type: "viz_compound",
-      fig: "FIG 3.4 // CHEM_DATA"
+    const savedLang = localStorage.getItem("language") as "TR" | "EN" | "DE";
+    if (savedLang) {
+      setActiveLang(savedLang);
     }
-  };
+  }, []);
 
-  const data = (modules as any)[activeTab];
+  const t = TRANSLATIONS[activeLang];
 
   return (
-    <section className="min-h-screen border-y border-[#2A3241] bg-[#0B0E14] grid grid-cols-1 lg:grid-cols-2 overflow-hidden relative text-white">
+    <section className="min-h-screen bg-[#0B0E14] flex items-center justify-center py-20 border-t border-[#2A3241] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-      {/* SOL TARAF: KONTROL PANELİ */}
-      <div className="p-12 lg:p-24 flex flex-col justify-center relative z-20">
+        {/* SOL TARAF: METİN ALANI */}
+        <div>
+          {/* TAB MENÜSÜ GÖRÜNÜMÜ */}
+          <div className="flex gap-8 mb-12 border-b border-[#2A3241] pb-4">
+            <span className="text-[#00FF41] text-xs font-mono tracking-widest border-b-2 border-[#00FF41] pb-4">
+              [{t.tag}]
+            </span>
+            <span className="text-gray-600 text-xs font-mono tracking-widest hidden md:inline-block">
+              SUPPLIER_AUDIT
+            </span>
+            <span className="text-gray-600 text-xs font-mono tracking-widest hidden md:inline-block">
+              ASSET_LIFESPAN
+            </span>
+          </div>
 
-        <div className="flex gap-4 mb-12 border-b border-[#2A3241] pb-4 flex-wrap">
-          {(Object.keys(modules) as Array<keyof typeof modules>).map((key) => (
-            <button
-              key={key}
-              onClick={() => setActiveTab(key)}
-              className={`font-mono text-xs tracking-widest px-4 py-2 border transition-all duration-300 ${activeTab === key
-                  ? "border-[#00FF41] text-[#00FF41] bg-[#00FF41]/10"
-                  : "border-transparent text-gray-600 hover:text-white"
-                }`}
-            >
-              {modules[key].label}
-            </button>
-          ))}
-        </div>
+          <div className="mb-12">
+            <h2 className="text-[#00FF41] font-mono text-[10px] tracking-[0.4em] mb-4 uppercase">
+              // BERLIN_LAB_ANALYSIS
+            </h2>
+            <h3 className="text-4xl md:text-6xl font-black text-white leading-[0.9] tracking-tighter uppercase">
+              {t.title}
+            </h3>
+          </div>
 
-        <motion.div
-          key={activeTab + lang}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="font-mono text-[#00FF41] text-xs mb-4 block">
-            // LAB_MODULE_{data.id}
-          </span>
-          <h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight tracking-tighter text-white uppercase">
-            {data.title}
-          </h2>
-          <div className="space-y-10">
-            <div className="group">
-              <div className="flex items-center gap-4 mb-2">
-                <span className="font-mono text-xs text-gray-500">PARAM_A</span>
-                <h3 className="font-mono text-lg text-white group-hover:text-[#00FF41] transition-colors uppercase">
-                  {lang === "TR" ? "ANALİZ_KAPSAMI" : "SCOPE_OF_ANALYSIS"}
-                </h3>
-              </div>
-              <p className="text-sm text-gray-400 pl-8 border-l border-gray-800 ml-2 leading-relaxed">
-                {data.desc}
+          <div className="space-y-12">
+            {/* PARAMETRE A - ANLAŞILIR DİL */}
+            <div className="relative pl-6 border-l border-[#2A3241]">
+              <h4 className="text-white font-bold text-lg mb-2 flex items-center gap-3">
+                <span className="text-[10px] text-gray-500 font-mono">01</span>
+                {t.param1_title}
+              </h4>
+              <p className="text-gray-400 text-sm leading-relaxed font-mono">
+                {t.param1_desc}
               </p>
             </div>
-            <div className="group">
-              <div className="flex items-center gap-4 mb-2">
-                <span className="font-mono text-xs text-gray-500">PARAM_B</span>
-                <h3 className="font-mono text-lg text-white group-hover:text-[#00FF41] transition-colors uppercase">
-                  {data.spec}
-                </h3>
-              </div>
-              <p className="text-sm text-gray-400 pl-8 border-l border-gray-800 ml-2 leading-relaxed">
-                {data.specDesc}
+
+            {/* PARAMETRE B - ANLAŞILIR DİL */}
+            <div className="relative pl-6 border-l border-[#2A3241]">
+              <h4 className="text-white font-bold text-lg mb-2 flex items-center gap-3">
+                <span className="text-[10px] text-gray-500 font-mono">02</span>
+                {t.param2_title}
+              </h4>
+              <p className="text-gray-400 text-sm leading-relaxed font-mono">
+                {t.param2_desc}
               </p>
             </div>
           </div>
-        </motion.div>
-      </div>
-
-      {/* SAĞ TARAF: GÖRSEL ALANI */}
-      <div className="relative flex items-center justify-center bg-black min-h-[500px] overflow-hidden p-8 lg:p-16">
-        <div className="absolute inset-0 opacity-20 mix-blend-screen pointer-events-none">
-          <Image
-            src="/images/tech-bg.jpg"
-            alt="Tech Background"
-            fill
-            className="object-cover opacity-50"
-          />
         </div>
 
-        <div className="relative z-10 w-full h-full max-w-[600px] max-h-[600px] flex items-center justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, scale: 0.95, filter: "blur(5px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, scale: 1.05, filter: "blur(5px)" }}
-              transition={{ duration: 0.4 }}
-              className="w-full h-full"
-            >
-              {/* GÖRSEL TİPİNE GÖRE İÇERİK SEÇİMİ */}
+        {/* SAĞ TARAF: GÖRSEL ALANI */}
+        <div className="relative group">
+          {/* Arka plan efekti */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-[#00FF41] to-blue-600 rounded-lg blur opacity-10 group-hover:opacity-20 transition duration-1000"></div>
 
-              {data.type === 'image' && (
-                <div className="relative w-full h-full mix-blend-screen">
-                  <Image src={data.image} alt="Structure Analysis" fill className="object-contain" />
-                  <motion.div
-                    className="absolute w-full h-[2px] bg-[#00FF41] shadow-[0_0_20px_#00FF41] opacity-50 z-20 top-0 left-0"
-                    animate={{ top: ["0%", "100%", "0%"] }}
-                    transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-                  />
-                </div>
-              )}
+          <div className="relative bg-[#151922] border border-[#2A3241] p-2">
+            {/* GÖRSEL DEĞİŞTİRME ALANI: Kendi görselini buraya koyabilirsin */}
+            <div className="aspect-square relative overflow-hidden bg-black">
+              {/* Buraya uygun bir 'wireframe' veya 'x-ray' görseli çok yakışır */}
+              <div className="absolute inset-0 flex items-center justify-center text-gray-700 font-mono text-xs text-center p-8 border border-dashed border-gray-800">
+                [ 3D MATERIAL SCAN VISUALIZATION ]
+                <br />
+                <span className="text-[#00FF41] mt-2 block">LOADING_ASSET...</span>
+              </div>
 
-              {data.type === 'viz_fiber' && <FiberViz />}
+              {/* Görselin varsa aşağıdaki Image componentini aktif et: */}
+              {/* <Image src="/path-to-your-image.jpg" alt="Analysis" fill className="object-cover opacity-80" /> */}
+            </div>
 
-              {data.type === 'viz_compound' && <CompoundViz />}
+            {/* GÖRSEL ÜZERİ DATA KATMANLARI */}
+            <div className="absolute top-8 right-8 text-right">
+              <div className="text-[10px] text-gray-500 font-mono mb-1">DENSITY SCAN</div>
+              <div className="text-2xl font-bold text-white font-mono">98.4%</div>
+            </div>
 
-            </motion.div>
-          </AnimatePresence>
+            <div className="absolute bottom-8 left-8">
+              <div className="text-[10px] text-gray-500 font-mono mb-1">STRUCTURAL INTEGRITY</div>
+              <div className="flex gap-1">
+                <div className="w-8 h-1 bg-[#00FF41]"></div>
+                <div className="w-8 h-1 bg-[#00FF41]"></div>
+                <div className="w-8 h-1 bg-[#00FF41]"></div>
+                <div className="w-8 h-1 bg-gray-700"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="absolute bottom-6 right-6 font-mono text-[10px] text-[#00FF41] border border-[#00FF41]/30 px-4 py-2 bg-black/50 backdrop-blur-md z-30 uppercase tracking-widest">
-          {data.fig}
-        </div>
       </div>
     </section>
   );

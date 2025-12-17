@@ -4,102 +4,102 @@ import { Activity, ArrowRight, ShieldAlert, Thermometer } from "lucide-react";
 import Link from "next/link";
 
 const TRANSLATIONS = {
-    TR: {
-        section_tag: "// İSTİHBARAT_AKIŞI_V.2.0",
-        section_title: "SON ADLİ BULGULAR",
-        btn_text: "ARŞİV VERİTABANINA GİR [ >>> ]",
-        loss_label: "ÖNLENEBİLİR YILLIK KAYIP",
-        reports: [
-            {
-                id: "RPT-7702-ANT",
-                vector: "ISI_KAYBI",
-                title: "KİREÇLENME KAYNAKLI ENERJİ İSRAFI",
-                loss: "$118,400",
-                status: "KRİTİK",
-                icon: <Thermometer size={18} className="text-red-500" />
-            },
-            {
-                id: "RPT-4409-BER",
-                vector: "KİMYASAL_YIPRANMA",
-                title: "TEKSTİL ÜRÜNLERİNDE ERKEN ÇÜRÜME",
-                loss: "$42,200",
-                status: "STABİL",
-                icon: <Activity size={18} className="text-lime-500" />
-            },
-            {
-                id: "RPT-1205-IST",
-                vector: "MALİYET_KAÇAĞI",
-                title: "ISITICILARDA PERFORMANS DÜŞÜKLÜĞÜ",
-                loss: "$15,800",
-                status: "İZLENİYOR",
-                icon: <ShieldAlert size={18} className="text-orange-500" />
-            }
-        ]
-    },
-    EN: {
-        section_tag: "// INTELLIGENCE_FEED_V.2.0",
-        section_title: "LATEST FORENSIC FINDINGS",
-        btn_text: "ENTER_ARCHIVE_DATALINK [ >>> ]",
-        loss_label: "ESTIMATED ANNUAL LOSS",
-        reports: [
-            {
-                id: "RPT-7702-ANT",
-                vector: "THERMAL_LOSS",
-                title: "ENERGY WASTE DUE TO CALCIFICATION",
-                loss: "$118,400",
-                status: "CRITICAL",
-                icon: <Thermometer size={18} className="text-red-500" />
-            },
-            {
-                id: "RPT-4409-BER",
-                vector: "CHEMICAL_DAMAGE",
-                title: "PREMATURE TEXTILE DEGRADATION",
-                loss: "$42,200",
-                status: "STABLE",
-                icon: <Activity size={18} className="text-lime-500" />
-            },
-            {
-                id: "RPT-1205-IST",
-                vector: "OPEX_SURGE",
-                title: "PERFORMANCE DROP IN HEATERS",
-                loss: "$15,800",
-                status: "MONITORING",
-                icon: <ShieldAlert size={18} className="text-orange-500" />
-            }
-        ]
-    },
-    DE: {
-        section_tag: "// NACHRICHTEN_FEED_V.2.0",
-        section_title: "AKTUELLE FORENSIK-ERGEBNISSE",
-        btn_text: "ARCHIV-DATENLINK EINGEBEN [ >>> ]",
-        loss_label: "GESCHÄTZTER JÄHRLICHER VERLUST",
-        reports: [
-            {
-                id: "RPT-7702-ANT",
-                vector: "WÄRMEVERLUST",
-                title: "ENERGIEVERSCHWENDUNG DURCH VERKALKUNG",
-                loss: "$118,400",
-                status: "KRITISCH",
-                icon: <Thermometer size={18} className="text-red-500" />
-            },
-            {
-                id: "RPT-4409-BER",
-                vector: "CHEMISCHER_SCHADEN",
-                title: "VORZEITIGER TEXTILVERSCHLEISS",
-                loss: "$42,200",
-                status: "STABIL",
-                icon: <Activity size={18} className="text-lime-500" />
-            },
-            {
-                id: "RPT-1205-IST",
-                vector: "KOSTENANSTIEG",
-                title: "LEISTUNGSABFALL BEI HEIZGERÄTEN",
-                loss: "$15,800",
-                status: "ÜBERWACHUNG",
-                icon: <ShieldAlert size={18} className="text-orange-500" />
-            }
-        ]
-    }
+  TR: {
+    section_tag: "// KRİTİK_UYARILAR",
+    section_title: "TESPİT EDİLEN MALİYET KAÇAKLARI",
+    btn_text: "TÜM ZARAR RAPORLARINI GÖR [ >>> ]",
+    loss_label: "BU HATANIN YILLIK BEDELİ",
+    reports: [
+      { 
+        id: "VAKA-001", 
+        vector: "ENERJİ_FATURASI", 
+        title: "ISITMA SİSTEMLERİNDE GİZLİ %35 ENERJİ KAYBI", // Çok net bir acı noktası
+        loss: "$118,400", 
+        status: "ACİL_DURUM", 
+        icon: <Thermometer size={18} className="text-red-500" /> 
+      },
+      { 
+        id: "VAKA-002", 
+        vector: "SATIN_ALMA_HATASI", 
+        title: "HAVLULARIN ÖMRÜNÜ YARIYA İNDİREN YIKAMA HATASI", // Merak uyandırıcı
+        loss: "$42,200", 
+        status: "YAYGIN", 
+        icon: <Activity size={18} className="text-lime-500" /> 
+      },
+      { 
+        id: "VAKA-003", 
+        vector: "PERSONEL_VERİMSİZLİĞİ", 
+        title: "TEMİZLİK SÜRESİNİ UZATAN KİREÇ TUZAĞI", // Operasyonel verimlilik
+        loss: "$15,800", 
+        status: "GİZLİ_GİDER", 
+        icon: <ShieldAlert size={18} className="text-orange-500" /> 
+      }
+    ]
+  },
+  EN: {
+    section_tag: "// CRITICAL_ALERTS",
+    section_title: "DETECTED FINANCIAL LEAKS",
+    btn_text: "VIEW ALL LOSS REPORTS [ >>> ]",
+    loss_label: "ANNUAL COST OF THIS ERROR",
+    reports: [
+      { 
+        id: "CASE-001", 
+        vector: "ENERGY_BILL", 
+        title: "HIDDEN 35% ENERGY LOSS IN HEATING SYSTEMS", 
+        loss: "$118,400", 
+        status: "URGENT", 
+        icon: <Thermometer size={18} className="text-red-500" /> 
+      },
+      { 
+        id: "CASE-002", 
+        vector: "PROCUREMENT_ERROR", 
+        title: "THE WASHING MISTAKE HALVING TOWEL LIFESPAN", 
+        loss: "$42,200", 
+        status: "COMMON", 
+        icon: <Activity size={18} className="text-lime-500" /> 
+      },
+      { 
+        id: "CASE-003", 
+        vector: "STAFF_INEFFICIENCY", 
+        title: "THE LIMESCALE TRAP DOUBLING CLEANING TIME", 
+        loss: "$15,800", 
+        status: "HIDDEN_COST", 
+        icon: <ShieldAlert size={18} className="text-orange-500" /> 
+      }
+    ]
+  },
+  DE: {
+    section_tag: "// KRITISCHE_WARNUNGEN",
+    section_title: "ERKANNTE FINANZLECKS",
+    btn_text: "ALLE VERLUSTBERICHTE ANSEHEN [ >>> ]",
+    loss_label: "JÄHRLICHE KOSTEN DIESES FEHLERS",
+    reports: [
+      { 
+        id: "FALL-001", 
+        vector: "ENERGIE_RECHNUNG", 
+        title: "VERSTECKTER 35% ENERGIEVERLUST IN HEIZSYSTEMEN", 
+        loss: "$118,400", 
+        status: "DRINGEND", 
+        icon: <Thermometer size={18} className="text-red-500" /> 
+      },
+      { 
+        id: "FALL-002", 
+        vector: "BESCHAFFUNGSFEHLER", 
+        title: "WASCHFEHLER HALBIERT HANDTUCH-LEBENSDAUER", 
+        loss: "$42,200", 
+        status: "HÄUFIG", 
+        icon: <Activity size={18} className="text-lime-500" /> 
+      },
+      { 
+        id: "FALL-003", 
+        vector: "PERSONAL_INEFFIZIENZ", 
+        title: "KALKFALLE VERDOPPELT REINIGUNGSZEIT", 
+        loss: "$15,800", 
+        status: "VERSTECKTE_KOSTEN", 
+        icon: <ShieldAlert size={18} className="text-orange-500" /> 
+      }
+    ]
+  }
 };
 
 export default function IntelligenceArchive() {
@@ -160,15 +160,15 @@ export default function IntelligenceArchive() {
                             <div>
                                 <div className="flex justify-between items-center mb-6">
                                     <span className="font-mono text-[9px] text-[#00FF41] bg-[#00FF41]/5 px-2 py-1 border border-[#00FF41]/20 uppercase">
-                                        ID: {rpt.id}
+                                        DOSYA: {rpt.id}
                                     </span>
-                                    <span className={`font-mono text-[8px] tracking-widest ${rpt.status === 'KRİTİK' || rpt.status === 'CRITICAL' || rpt.status === 'KRITISCH' ? 'text-red-500' : 'text-gray-500'}`}>
+                                    <span className={`font-mono text-[8px] tracking-widest ${rpt.status === 'ACİL_DURUM' || rpt.status === 'URGENT' || rpt.status === 'DRINGEND' ? 'text-red-500' : 'text-gray-500'}`}>
                                         [{rpt.status}]
                                     </span>
                                 </div>
 
                                 <div className="font-mono text-[9px] text-gray-500 mb-1 tracking-tighter uppercase">
-                                    VECTOR: {rpt.vector}
+                                    SEBEP: {rpt.vector}
                                 </div>
                                 <h3 className="text-white font-bold text-xl group-hover:text-[#00FF41] transition-colors leading-tight mb-4 uppercase italic tracking-tighter">
                                     {rpt.title}
